@@ -131,4 +131,17 @@ public class SunPosition : MonoBehaviour
             return angleInRadians;
         }
     }
+
+
+    // Función que convierta de día y mes a dn
+    // Cálculo del day angle (2*Pi*(dn-1)/365)
+    // Cálculo de Et
+    // Función que convierta la hora a LAT (corrección horaria)
+    // Cálculo del ángulo horario
+    // Cálculo del solar declination
+    // Cálculo de la altura solar
+    // Cálculo del azimuth solar
+
+
+    // Paso 1: dada una ubicación y fecha situa al sol tomando al observador como referencia
 }
