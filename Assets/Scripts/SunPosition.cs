@@ -12,6 +12,10 @@ public class SunPosition : MonoBehaviour
     private const double Deg2Rad = Math.PI / 180.0;
     private const double Rad2Deg = 180.0 / Math.PI;
 
+    private double altitude;
+    private double azimuth;
+
+
     /*!
      * \brief Calculates the sun light.
      *
@@ -24,7 +28,7 @@ public class SunPosition : MonoBehaviour
      * \param latitude Latitude expressed in decimal degrees.
      * \param longitude Longitude expressed in decimal degrees.
      */
-    public static void CalculateSunPosition(DateTime dateTime, double latitude, double longitude)
+    public void CalculateSunPosition(DateTime dateTime, double latitude, double longitude, GameObject sun)
     {
         // Convert to UTC
         dateTime = dateTime.ToUniversalTime();
@@ -81,7 +85,7 @@ public class SunPosition : MonoBehaviour
             hourAngle -= 2 * Math.PI;
         }
 
-        double altitude = Math.Asin(Math.Sin(latitude * Deg2Rad) *
+        altitude = Math.Asin(Math.Sin(latitude * Deg2Rad) *
             Math.Sin(declination) + Math.Cos(latitude * Deg2Rad) *
             Math.Cos(declination) * Math.Cos(hourAngle));
 
@@ -92,7 +96,7 @@ public class SunPosition : MonoBehaviour
             Math.Tan(declination) * Math.Cos(latitude * Deg2Rad) -
             Math.Sin(latitude * Deg2Rad) * Math.Cos(hourAngle);
 
-        double azimuth = Math.Atan(aziNom / aziDenom);
+        azimuth = Math.Atan(aziNom / aziDenom);
 
         if (aziDenom < 0) // In 2nd or 3rd quadrant
         {
@@ -108,6 +112,9 @@ public class SunPosition : MonoBehaviour
 
         // Azimut
         Debug.Log("Azimuth: " + azimuth * Rad2Deg);
+
+
+        RotateDirectionalLight(sun);
     }
 
     /*!
@@ -132,6 +139,12 @@ public class SunPosition : MonoBehaviour
         }
     }
 
+
+    private void RotateDirectionalLight(GameObject sun)
+    {
+        sun.transform.eulerAngles = new Vector3((float)(altitude * Rad2Deg), (float)(azimuth * Rad2Deg), 0);
+        transform.position = new Vector3((float)(10 * Math.Cos(azimuth)), (float)(10 * Math.Sin(altitude)), (float)(10 * Math.Sin(azimuth)));
+    }
 
     // Función que convierta de día y mes a dn
     // Cálculo del day angle (2*Pi*(dn-1)/365)
