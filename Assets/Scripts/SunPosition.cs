@@ -142,8 +142,9 @@ public class SunPosition : MonoBehaviour
 
     private void RotateDirectionalLight(GameObject sun)
     {
+        float sphereOffset = 30;
         sun.transform.eulerAngles = new Vector3((float)(altitude * Rad2Deg), (float)(azimuth * Rad2Deg), 0);
-        transform.position = new Vector3((float)(10 * Math.Cos(azimuth)), (float)(10 * Math.Sin(altitude)), (float)(10 * Math.Sin(azimuth)));
+        transform.position = new Vector3((float)(sphereOffset * Math.Cos(azimuth)), (float)(sphereOffset * Math.Sin(altitude)), (float)(sphereOffset * Math.Sin(azimuth)));
     }
 
     // Función que convierta de día y mes a dn
