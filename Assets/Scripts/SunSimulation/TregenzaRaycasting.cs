@@ -8,11 +8,21 @@ public class TregenzaRaycasting : MonoBehaviour
     [SerializeField] private float rayDistance = 50f;
     [SerializeField] private LayerMask layerMask;
 
+    [Header("Debugging")]
+    [SerializeField] private float diskRadius = 5f;
+    [SerializeField] private bool drawLines = true;
+    [SerializeField] private bool drawDisks = true;
+
     private List<Patch> tregenzaPatches = new List<Patch>(145);
     private List <Vector3> rayDirections = new List<Vector3>(145);
     private List<bool> raycastHit = new List<bool>(145);
 
     private void Start()
+    {
+        UpdatePatches();
+    }
+
+    public void UpdatePatches()
     {
         GetDirections();
         CastRays();
@@ -57,6 +67,8 @@ public class TregenzaRaycasting : MonoBehaviour
         }
     }
 
+
+    #region Debugging
     private void OnDrawGizmos()
     {
         if (rayDirections == null || rayDirections.Count == 0)
@@ -68,9 +80,12 @@ public class TregenzaRaycasting : MonoBehaviour
             Gizmos.color = c;
 
             Vector3 endPoint = transform.position + rayDirections[i] * rayDistance;
-            Gizmos.DrawLine(transform.position, endPoint);
+            
+            if(drawLines)
+                Gizmos.DrawLine(transform.position, endPoint);
 
-            DrawDisk(endPoint, rayDirections[i], 5f, c, 24);
+            if(drawDisks)
+                DrawDisk(endPoint, rayDirections[i], diskRadius, c, 24);
         }
     }
 
@@ -98,4 +113,5 @@ public class TregenzaRaycasting : MonoBehaviour
             prevPoint = nextPoint;
         }
     }
+    #endregion
 }
