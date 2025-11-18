@@ -205,7 +205,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1050823362}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: TregenzaRaycasting, Assembly-CSharp
         m_MethodName: UpdatePatches
         m_Mode: 1
@@ -426,6 +426,54 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &361558054
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 361558056}
+  - component: {fileID: 361558055}
+  m_Layer: 0
+  m_Name: DiffuseRadianceCalculator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &361558055
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 361558054}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ec51c37e71ff894a92c5fae0590e3b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  month: 5
+  day: 26
+  hour: 13
+  minutes: 5
+--- !u!4 &361558056
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 361558054}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.71936744, y: 66.75421, z: 71.94052}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &406154643
 GameObject:
   m_ObjectHideFlags: 1
@@ -1757,7 +1805,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   diskRadius: 5
-  drawLines: 0
+  drawLines: 1
   drawDisks: 1
 --- !u!1 &1179527605
 GameObject:
@@ -2406,3 +2454,4 @@ SceneRoots:
   - {fileID: 1530363826}
   - {fileID: 615955533}
   - {fileID: 1840016556}
+  - {fileID: 361558056}

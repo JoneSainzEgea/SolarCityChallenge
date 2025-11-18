@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TregenzaRaycasting : MonoBehaviour
+public class TregenzaRayCasting : MonoBehaviour
 {
     [Header("Raycast Settings")]
     [SerializeField] private float rayDistance = 50f;
@@ -14,7 +14,7 @@ public class TregenzaRaycasting : MonoBehaviour
     [SerializeField] private bool drawDisks = true;
 
     private List<Patch> tregenzaPatches = new List<Patch>(145);
-    private List <Vector3> rayDirections = new List<Vector3>(145);
+    private List<Vector3> rayDirections = new List<Vector3>(145);
     private List<bool> raycastHit = new List<bool>(145);
 
     private void Start()
@@ -22,10 +22,12 @@ public class TregenzaRaycasting : MonoBehaviour
         UpdatePatches();
     }
 
-    public void UpdatePatches()
+    public List<bool> UpdatePatches()
     {
         GetDirections();
         CastRays();
+
+        return raycastHit;
     }
 
     private void GetDirections()
@@ -35,6 +37,11 @@ public class TregenzaRaycasting : MonoBehaviour
 
         tregenzaPatches = TregenzaSky.GenertePatches();
 
+        FromGeometryToDirections();
+    }
+
+    private void FromGeometryToDirections()
+    {
         for (int i = 0; i < tregenzaPatches.Count; ++i)
         {
             float elevationDeg = tregenzaPatches[i].Elevation;
@@ -48,9 +55,10 @@ public class TregenzaRaycasting : MonoBehaviour
             float sinAz = Mathf.Sin(az);
             float cosAz = Mathf.Cos(az);
 
-            float x = cosElev * sinAz;      // norte = +x
-            float y = sinElev;              // arriba = +y
-            float z = cosElev * -cosAz;     // este = -z
+            // norte = +x; arriba = +y; este = -z
+            float x = cosElev * sinAz;
+            float y = sinElev;
+            float z = cosElev * -cosAz;
 
             Vector3 direction = new Vector3(x, y, z).normalized;
 
@@ -80,11 +88,11 @@ public class TregenzaRaycasting : MonoBehaviour
             Gizmos.color = c;
 
             Vector3 endPoint = transform.position + rayDirections[i] * rayDistance;
-            
-            if(drawLines)
+
+            if (drawLines)
                 Gizmos.DrawLine(transform.position, endPoint);
 
-            if(drawDisks)
+            if (drawDisks)
                 DrawDisk(endPoint, rayDirections[i], diskRadius, c, 24);
         }
     }
