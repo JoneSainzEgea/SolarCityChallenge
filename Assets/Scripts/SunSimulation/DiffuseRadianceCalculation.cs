@@ -9,6 +9,9 @@ public class DiffuseRadianceCalculation : MonoBehaviour
     private List<bool> raycastHits = new List<bool>();
     private List<double> luminanceValues = new List<double>();
     private List<double> luminanceFromObserver = new List<double>();
+    //private Dictionary<int, double> luminanceFromObserver = new Dictionary<int, double>();
+
+    [SerializeField] private LuminanceCSVReading luminanceCSV;
 
     [Header("Date")]
     private int year = 2025;
@@ -19,6 +22,15 @@ public class DiffuseRadianceCalculation : MonoBehaviour
 
     private void Start()
     {
+        UpdateDiffuseRadiance();
+    }
+
+    public void UpdateDiffuseRadiance()
+    {
+        raycastHits.Clear();
+        luminanceValues.Clear();
+        luminanceFromObserver.Clear();
+
         GetTregenzaRayCasting();
         GetLuminanceValues();
         SaveLuminanceFromObserver();
@@ -27,7 +39,6 @@ public class DiffuseRadianceCalculation : MonoBehaviour
 
     private void GetTregenzaRayCasting()
     {
-        raycastHits.Clear();
         raycastHits = GetComponent<TregenzaRayCasting>().UpdatePatches();
     }
 
@@ -37,9 +48,11 @@ public class DiffuseRadianceCalculation : MonoBehaviour
 
         string formattedDate = date.ToString("yyyy-MM-dd HH:mm");
 
-        luminanceValues = LuminanceCSVReading.GetValues(formattedDate);
+        luminanceValues = luminanceCSV.GetValues(formattedDate);
 
-        Debug.Log(formattedDate);
+        PrintList(luminanceValues);
+
+        Debug.Log("Valores encontrados: " + luminanceValues.Count);
     }
 
     private void SaveLuminanceFromObserver()
@@ -51,10 +64,22 @@ public class DiffuseRadianceCalculation : MonoBehaviour
                 luminanceFromObserver.Add(luminanceValues[i]);
             }
         }
+
+        Debug.Log("Valores a sumar: " + luminanceFromObserver.Count);
+
+        PrintList(luminanceFromObserver);
     }
 
     private void CalculateDiffuseRadiance()
     {
         // Preguntar
     }
+
+    #region Debugging
+    private void PrintList(List<double> list)
+    {
+        Debug.Log(string.Join(", ", list));
+    }
+
+    #endregion
 }
