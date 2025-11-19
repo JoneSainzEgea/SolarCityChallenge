@@ -8,10 +8,11 @@ public class DiffuseRadianceCalculation : MonoBehaviour
 {
     private List<bool> raycastHits = new List<bool>();
     private List<double> luminanceValues = new List<double>();
-    private List<double> luminanceFromObserver = new List<double>();
-    //private Dictionary<int, double> luminanceFromObserver = new Dictionary<int, double>();
+    //private List<double> luminanceFromObserver = new List<double>();
+    private Dictionary<int, double> luminanceFromObserver = new Dictionary<int, double>();
 
     [SerializeField] private LuminanceCSVReading luminanceCSV;
+    [SerializeField] private TregenzaRayCasting raycasting;
 
     [Header("Date")]
     private int year = 2025;
@@ -19,6 +20,10 @@ public class DiffuseRadianceCalculation : MonoBehaviour
     [Range(1, 31)][SerializeField] private int day;
     [Range(6, 23)][SerializeField] private int hour;
     [Range(0, 55)][SerializeField] private int minutes;
+
+    [Header("Debugging")]
+    [SerializeField] private Color color0;
+    [SerializeField] private Color color1;
 
     private void Start()
     {
@@ -61,13 +66,17 @@ public class DiffuseRadianceCalculation : MonoBehaviour
         {
             if (raycastHits[i] == false)
             {
-                luminanceFromObserver.Add(luminanceValues[i]);
+                luminanceFromObserver.Add(i, luminanceValues[i]);
+            }
+            else
+            {
+                luminanceFromObserver.Add(i, 0d);
             }
         }
 
         Debug.Log("Valores a sumar: " + luminanceFromObserver.Count);
 
-        PrintList(luminanceFromObserver);
+        PrintColors(luminanceFromObserver);
     }
 
     private void CalculateDiffuseRadiance()
@@ -81,5 +90,10 @@ public class DiffuseRadianceCalculation : MonoBehaviour
         Debug.Log(string.Join(", ", list));
     }
 
+
+    private void PrintColors(Dictionary<int, double> luminance)
+    {
+        raycasting.ColorPatches(luminance);
+    }
     #endregion
 }

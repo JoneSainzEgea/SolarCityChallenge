@@ -9,9 +9,9 @@ public class InputManager : MonoBehaviour
     [SerializeField] private Camera sceneCamera;
     private Vector3 lastPosition;
     [SerializeField] private LayerMask placementLayerMask;
-    public event Action OnMousePressed, OnMouseReleased, OnCancel, OnUndo;
-    public event Action<int> OnRotate;
-    public event Action<bool> OnToggleDelete;
+    //public event Action OnMousePressed, OnMouseReleased, OnCancel, OnUndo;
+    //public event Action<int> OnRotate;
+    //public event Action<bool> OnToggleDelete;
 
     public Vector3 GetSelectedMapPosition()
     {
@@ -30,11 +30,11 @@ public class InputManager : MonoBehaviour
 
     public bool GetPlacementInput() => Input.GetMouseButtonDown(0);
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            OnCancel?.Invoke();
-        }
-    }
+    //private void Update()
+    //{
+    //    if (Input.GetKeyDown(KeyCode.Escape))
+    //    {
+    //        OnCancel?.Invoke();
+    //    }
+    //}
 }

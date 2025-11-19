@@ -9,6 +9,7 @@ public class TregenzaRayCasting : MonoBehaviour
     [SerializeField] private LayerMask layerMask;
 
     [Header("Debugging")]
+    [SerializeField] private GameObject circlePrefab;
     [SerializeField] private float diskRadius = 5f;
     [SerializeField] private bool drawLines = true;
     [SerializeField] private bool drawDisks = true;
@@ -16,6 +17,7 @@ public class TregenzaRayCasting : MonoBehaviour
     private List<Patch> tregenzaPatches = new List<Patch>(145);
     private List<Vector3> rayDirections = new List<Vector3>(145);
     private List<bool> raycastHit = new List<bool>(145);
+    private GameObject[] circleInstances;
 
     private void Start()
     {
@@ -26,6 +28,9 @@ public class TregenzaRayCasting : MonoBehaviour
     {
         GetDirections();
         CastRays();
+
+        if (drawDisks)
+            DrawCircles();
 
         return raycastHit;
     }
@@ -75,6 +80,30 @@ public class TregenzaRayCasting : MonoBehaviour
         }
     }
 
+    public void ColorPatches(Dictionary<int, double> luminance)
+    {
+        if (circleInstances == null) return;
+
+        foreach (var pair in luminance)
+        {
+            int index = pair.Key;
+            double value = pair.Value;
+
+            if (index < 0 || index >= circleInstances.Length)
+                continue;
+
+            GameObject circle = circleInstances[index];
+
+            if (circle == null) continue;
+
+            Color newColor = ColorFromValue(value);
+
+            Renderer rend = circle.GetComponent<Renderer>();
+            if (rend != null)
+                rend.material.SetColor("_BaseColor", newColor);
+        }
+    }
+
 
     #region Debugging
     private void OnDrawGizmos()
@@ -91,35 +120,35 @@ public class TregenzaRayCasting : MonoBehaviour
 
             if (drawLines)
                 Gizmos.DrawLine(transform.position, endPoint);
-
-            if (drawDisks)
-                DrawDisk(endPoint, rayDirections[i], diskRadius, c, 24);
         }
     }
 
-    private void DrawDisk(Vector3 center, Vector3 normal, float radius, Color color, int segments = 24)
+    private void DrawCircles()
     {
-        Gizmos.color = color;
+        circleInstances = new GameObject[rayDirections.Count];
 
-        Vector3 v1 = Vector3.Cross(normal, Vector3.up);
-        if (v1.sqrMagnitude < 0.001f)
-            v1 = Vector3.Cross(normal, Vector3.right);
-
-        v1.Normalize();
-        Vector3 v2 = Vector3.Cross(normal, v1);
-
-        float angleStep = 360f / segments;
-
-        Vector3 prevPoint = center + v1 * radius;
-
-        for (int i = 1; i <= segments; i++)
+        for (int i = 0; i < rayDirections.Count; i++)
         {
-            float angle = angleStep * i * Mathf.Deg2Rad;
-            Vector3 nextPoint = center + (v1 * Mathf.Cos(angle) + v2 * Mathf.Sin(angle)) * radius;
+            Vector3 endPoint = transform.position + rayDirections[i] * rayDistance;
+            Quaternion rotation = Quaternion.LookRotation(rayDirections[i]);
 
-            Gizmos.DrawLine(prevPoint, nextPoint);
-            prevPoint = nextPoint;
+            GameObject instance = Instantiate(circlePrefab, endPoint, rotation, transform);
+            circleInstances[i] = instance;
         }
+    }
+
+    private Color ColorFromValue(double value)
+    {
+        if (value == 0)
+            return Color.black;
+        
+        float v = Mathf.Clamp01((float)value);
+
+        float hueStart = 0.66f; // azul
+        float hueEnd = 0.0f;    // rojo
+
+        float hue = Mathf.Lerp(hueStart, hueEnd, v);
+        return Color.HSVToRGB(hue, 1f, 1f);
     }
     #endregion
 }
