@@ -21,10 +21,6 @@ public class DiffuseRadianceCalculation : MonoBehaviour
     [Range(6, 23)][SerializeField] private int hour;
     [Range(0, 55)][SerializeField] private int minutes;
 
-    [Header("Debugging")]
-    [SerializeField] private Color color0;
-    [SerializeField] private Color color1;
-
     private void Start()
     {
         UpdateDiffuseRadiance();
@@ -36,16 +32,13 @@ public class DiffuseRadianceCalculation : MonoBehaviour
         luminanceValues.Clear();
         luminanceFromObserver.Clear();
 
-        GetTregenzaRayCasting();
+        raycastHits = raycasting.UpdateRayCasting();
+
         GetLuminanceValues();
         SaveLuminanceFromObserver();
         CalculateDiffuseRadiance();
     }
 
-    private void GetTregenzaRayCasting()
-    {
-        raycastHits = GetComponent<TregenzaRayCasting>().UpdatePatches();
-    }
 
     private void GetLuminanceValues()
     {
@@ -57,7 +50,7 @@ public class DiffuseRadianceCalculation : MonoBehaviour
 
         PrintList(luminanceValues);
 
-        Debug.Log("Valores encontrados: " + luminanceValues.Count);
+        //Debug.Log("Valores encontrados: " + luminanceValues.Count);
     }
 
     private void SaveLuminanceFromObserver()
@@ -76,24 +69,18 @@ public class DiffuseRadianceCalculation : MonoBehaviour
 
         Debug.Log("Valores a sumar: " + luminanceFromObserver.Count);
 
-        PrintColors(luminanceFromObserver);
+        raycasting.ColorPatches(luminanceFromObserver);
     }
 
     private void CalculateDiffuseRadiance()
     {
-        // Preguntar
+        List<float> incidentAngles = TregenzaSky.GetIncidentAngle(transform.up);
     }
 
     #region Debugging
     private void PrintList(List<double> list)
     {
         Debug.Log(string.Join(", ", list));
-    }
-
-
-    private void PrintColors(Dictionary<int, double> luminance)
-    {
-        raycasting.ColorPatches(luminance);
     }
     #endregion
 }

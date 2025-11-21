@@ -1773,8 +1773,6 @@ MonoBehaviour:
   day: 26
   hour: 14
   minutes: 5
-  color0: {r: 0, g: 0, b: 0, a: 0}
-  color1: {r: 0, g: 0, b: 0, a: 0}
 --- !u!114 &1050823365
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1792,8 +1790,12 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   circlePrefab: {fileID: 9173346918853857165, guid: 5e7ede228559422439fbd0d4d7b84d44, type: 3}
+  diskRadius: 5
   drawLines: 0
   drawDisks: 1
+  color0: {r: 0, g: 0.013357639, b: 1, a: 0}
+  color1: {r: 1, g: 0, b: 0.037246227, a: 0}
+  forwardHue: 0
 --- !u!1 &1179527605
 GameObject:
   m_ObjectHideFlags: 0

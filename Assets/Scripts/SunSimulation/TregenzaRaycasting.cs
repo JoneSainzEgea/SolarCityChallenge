@@ -11,20 +11,25 @@ public class TregenzaRayCasting : MonoBehaviour
 
     [Header("Debugging")]
     [SerializeField] private GameObject circlePrefab;
-    //[SerializeField] private float diskRadius = 5f;
+    [SerializeField] private float diskRadius = 5f;
     [SerializeField] private bool drawLines = true;
     [SerializeField] private bool drawDisks = true;
+    [SerializeField] private Color color0;
+    [SerializeField] private Color color1;
+    [SerializeField] private bool forwardHue = true;
 
-    private List<Patch> tregenzaPatches = new List<Patch>(145);
     private List<Vector3> rayDirections = new List<Vector3>(145);
     private List<bool> raycastHit = new List<bool>(145);
     private GameObject[] circleInstances;
 
-    public List<bool> UpdatePatches()
+    private void Awake()
     {
-        DestroyAllCircles();
+        TregenzaSky.GenertePatches();
+        rayDirections = TregenzaSky.GetDirections();
+    }
 
-        GetDirections();
+    public List<bool> UpdateRayCasting()
+    {
         CastRays();
 
         if (drawDisks)
@@ -33,56 +38,12 @@ public class TregenzaRayCasting : MonoBehaviour
         return raycastHit;
     }
 
-    private void DestroyAllCircles()
-    {
-        for (int i = transform.childCount - 1; i >= 0; i--)
-        {
-            Destroy(transform.GetChild(i).gameObject);
-        }
-    }
-
-    private void GetDirections()
-    {
-        rayDirections.Clear();
-        raycastHit.Clear();
-
-        tregenzaPatches = TregenzaSky.GenertePatches();
-
-        FromGeometryToDirections();
-    }
-
-    private void FromGeometryToDirections()
-    {
-        for (int i = 0; i < tregenzaPatches.Count; ++i)
-        {
-            float elevationDeg = tregenzaPatches[i].Elevation;
-            float azimtuhDeg = tregenzaPatches[i].Azimuth;
-
-            float elev = elevationDeg * Mathf.Deg2Rad;
-            float az = azimtuhDeg * Mathf.Deg2Rad;
-
-            float sinElev = Mathf.Sin(elev);
-            float cosElev = Mathf.Cos(elev);
-            float sinAz = Mathf.Sin(az);
-            float cosAz = Mathf.Cos(az);
-
-            // norte = +x; arriba = +y; este = -z
-            float x = cosElev * Mathf.Cos(az);
-            float z = cosElev * -Mathf.Sin(az);
-            float y = sinElev;
-
-            Vector3 direction = new Vector3(x, y, z).normalized;
-
-            rayDirections.Add(direction);
-            raycastHit.Add(false);
-        }
-    }
-
     private void CastRays()
     {
+        raycastHit.Clear();
         for (int i = 0; i < rayDirections.Count; i++)
         {
-            raycastHit[i] = Physics.Raycast(transform.position, rayDirections[i], out RaycastHit hit, rayDistance, layerMask);
+            raycastHit.Add(Physics.Raycast(transform.position, rayDirections[i], out RaycastHit hit, rayDistance, layerMask));
         }
     }
 
@@ -118,10 +79,10 @@ public class TregenzaRayCasting : MonoBehaviour
     #region Debugging
     private void OnDrawGizmos()
     {
-        if (rayDirections == null || rayDirections.Count == 0)
+        if (raycastHit == null || raycastHit.Count == 0)
             return;
 
-        for (int i = 0; i < rayDirections.Count; i++)
+        for (int i = 0; i < raycastHit.Count; i++)
         {
             Color c = raycastHit[i] ? Color.red : Color.green;
             Gizmos.color = c;
@@ -135,6 +96,8 @@ public class TregenzaRayCasting : MonoBehaviour
 
     private void DrawCircles()
     {
+        DestroyAllCircles();
+
         circleInstances = new GameObject[rayDirections.Count];
 
         for (int i = 0; i < rayDirections.Count; i++)
@@ -143,7 +106,16 @@ public class TregenzaRayCasting : MonoBehaviour
             Quaternion rotation = Quaternion.LookRotation(rayDirections[i]);
 
             GameObject instance = Instantiate(circlePrefab, endPoint, rotation, transform);
+            instance.transform.localScale = new Vector3 (diskRadius * 100f, diskRadius * 100f, diskRadius * 100f);
             circleInstances[i] = instance;
+        }
+    }
+
+    private void DestroyAllCircles()
+    {
+        for (int i = transform.childCount - 1; i >= 0; i--)
+        {
+            Destroy(transform.GetChild(i).gameObject);
         }
     }
 
@@ -154,11 +126,28 @@ public class TregenzaRayCasting : MonoBehaviour
         
         float v = Mathf.Clamp01((float)value);
 
-        float hueStart = 0.66f; // azul
-        float hueEnd = 0.0f;    // rojo
+        float hue0, hue1, sat, bright;
+        Color.RGBToHSV(color0, out hue0, out sat, out bright);
+        Color.RGBToHSV(color1, out hue1, out sat, out bright);
 
-        float hue = Mathf.Lerp(hueStart, hueEnd, v);
+        float hue = LerpHueDirected(hue0, hue1, v, forwardHue);
         return Color.HSVToRGB(hue, 1f, 1f);
+    }
+
+    private float LerpHueDirected(float h0, float h1, float t, bool forward)
+    {
+        if (forward)
+        {
+            if (h1 < h0)
+                h1 += 1f;
+        }
+        else
+        {
+            if (h1 > h0)
+                h1 -= 1f;
+        }
+
+        return Mathf.Repeat(Mathf.Lerp(h0, h1, t), 1f);
     }
     #endregion
 }
