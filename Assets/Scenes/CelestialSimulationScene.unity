@@ -1496,13 +1496,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.014648471, y: 0.9727375, z: -0.0640693, w: -0.22240163}
-  m_LocalPosition: {x: 28.4, y: 14.1, z: 44}
+  m_LocalRotation: {x: -0.08897965, y: 0.89379156, z: -0.3891781, w: -0.20435183}
+  m_LocalPosition: {x: 37.9, y: 84.6, z: 63.9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 7.537, y: 205.757, z: 0}
+  m_LocalEulerAnglesHint: {x: 47.059, y: 205.757, z: 0}
 --- !u!114 &963194229
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1771,7 +1771,7 @@ MonoBehaviour:
   raycasting: {fileID: 1050823365}
   month: 5
   day: 26
-  hour: 13
+  hour: 14
   minutes: 5
   color0: {r: 0, g: 0, b: 0, a: 0}
   color1: {r: 0, g: 0, b: 0, a: 0}
@@ -1792,7 +1792,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   circlePrefab: {fileID: 9173346918853857165, guid: 5e7ede228559422439fbd0d4d7b84d44, type: 3}
-  diskRadius: 5
   drawLines: 0
   drawDisks: 1
 --- !u!1 &1179527605
@@ -2238,7 +2237,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!65 &1530363823
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2479,6 +2478,14 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: c34d35a3f62ae0d4591428567332c67b, type: 2}
+    - target: {fileID: 6505331632157304706, guid: 5e7ede228559422439fbd0d4d7b84d44, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8000300136929509728, guid: 5e7ede228559422439fbd0d4d7b84d44, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 9173346918853857165, guid: 5e7ede228559422439fbd0d4d7b84d44, type: 3}
       propertyPath: m_Name
       value: TregenzaPatchCircle
@@ -2487,28 +2494,10 @@ PrefabInstance:
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 9173346918853857165, guid: 5e7ede228559422439fbd0d4d7b84d44, type: 3}
+    - targetCorrespondingSourceObject: {fileID: 8842912447007413908, guid: 5e7ede228559422439fbd0d4d7b84d44, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 8872958197939752160}
+      addedObject: {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 5e7ede228559422439fbd0d4d7b84d44, type: 3}
---- !u!1 &8872958197939752159 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 9173346918853857165, guid: 5e7ede228559422439fbd0d4d7b84d44, type: 3}
-  m_PrefabInstance: {fileID: 5598958771698495379}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &8872958197939752160
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8872958197939752159}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 625c88096b061f549a70331a703b3174, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  luminance: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

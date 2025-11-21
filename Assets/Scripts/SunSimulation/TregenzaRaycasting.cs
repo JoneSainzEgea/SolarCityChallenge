@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class TregenzaRayCasting : MonoBehaviour
 {
@@ -10,7 +11,7 @@ public class TregenzaRayCasting : MonoBehaviour
 
     [Header("Debugging")]
     [SerializeField] private GameObject circlePrefab;
-    [SerializeField] private float diskRadius = 5f;
+    //[SerializeField] private float diskRadius = 5f;
     [SerializeField] private bool drawLines = true;
     [SerializeField] private bool drawDisks = true;
 
@@ -19,13 +20,10 @@ public class TregenzaRayCasting : MonoBehaviour
     private List<bool> raycastHit = new List<bool>(145);
     private GameObject[] circleInstances;
 
-    private void Start()
-    {
-        UpdatePatches();
-    }
-
     public List<bool> UpdatePatches()
     {
+        DestroyAllCircles();
+
         GetDirections();
         CastRays();
 
@@ -33,6 +31,14 @@ public class TregenzaRayCasting : MonoBehaviour
             DrawCircles();
 
         return raycastHit;
+    }
+
+    private void DestroyAllCircles()
+    {
+        for (int i = transform.childCount - 1; i >= 0; i--)
+        {
+            Destroy(transform.GetChild(i).gameObject);
+        }
     }
 
     private void GetDirections()
@@ -61,9 +67,9 @@ public class TregenzaRayCasting : MonoBehaviour
             float cosAz = Mathf.Cos(az);
 
             // norte = +x; arriba = +y; este = -z
-            float x = cosElev * sinAz;
+            float x = cosElev * Mathf.Cos(az);
+            float z = cosElev * -Mathf.Sin(az);
             float y = sinElev;
-            float z = cosElev * -cosAz;
 
             Vector3 direction = new Vector3(x, y, z).normalized;
 
@@ -101,6 +107,10 @@ public class TregenzaRayCasting : MonoBehaviour
             Renderer rend = circle.GetComponent<Renderer>();
             if (rend != null)
                 rend.material.SetColor("_BaseColor", newColor);
+
+            TextMeshPro text = circle.GetComponentInChildren<TextMeshPro>();
+            if (text != null)
+                text.text = (index + 1).ToString();
         }
     }
 

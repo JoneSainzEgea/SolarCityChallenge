@@ -24,21 +24,49 @@ public static class TregenzaSky
 
         int[] ringCounts = { 30, 30, 24, 24, 18, 12, 6, 1 }; // Número de patches por anillo
 
+        float currentStartAz = 0f;
+        bool clockwise = true;
+
         for (int ring = 0; ring < ringCounts.Length; ring++)
         {
             int count = ringCounts[ring];
             float elevation = heights[ring];
-            float deltaAz = 360 / count;
+            float deltaAz = 360f / count;
+
+            if (ring == 5) // Excepción de azimuth en el sexto anillo
+            {
+                currentStartAz = (0f - deltaAz) % 360f;
+                if (currentStartAz < 0f) currentStartAz += 360f;
+            }
 
             for (int i = 0; i < count; i++)
             {
-                float azimuth = i * deltaAz;
+                float azimuth;
+
+                if (clockwise)
+                    azimuth = currentStartAz + i * deltaAz;
+                else
+                    azimuth = currentStartAz - i * deltaAz;
+
+                azimuth = (azimuth % 360f + 360f) % 360f;
 
                 if (!zeroNorth)
                     azimuth = (azimuth + 180f) % 360f;
                 
                 patches.Add(new Patch(elevation, azimuth));
             }
+
+            float lastAz;
+
+            if (clockwise)
+                lastAz = currentStartAz + (count - 1) * deltaAz;
+            else
+                lastAz = currentStartAz - (count - 1) * deltaAz;
+
+            lastAz = (lastAz % 360f + 360f) % 360f;
+
+            currentStartAz = lastAz;
+            clockwise = !clockwise;
         }
 
         return patches;
