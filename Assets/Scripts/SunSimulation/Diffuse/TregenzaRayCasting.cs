@@ -8,6 +8,7 @@ public class TregenzaRayCasting : MonoBehaviour
     [Header("Raycast Settings")]
     [SerializeField] private float rayDistance = 50f;
     [SerializeField] private LayerMask layerMask;
+    [SerializeField] private bool northIsZero = true;
 
     [Header("Debugging")]
     [SerializeField] private GameObject circlePrefab;
@@ -24,7 +25,7 @@ public class TregenzaRayCasting : MonoBehaviour
 
     private void Awake()
     {
-        TregenzaSky.GenertePatches();
+        TregenzaSky.GenertePatches(northIsZero);
         rayDirections = TregenzaSky.GetDirections();
     }
 
@@ -47,23 +48,20 @@ public class TregenzaRayCasting : MonoBehaviour
         }
     }
 
-    public void ColorPatches(Dictionary<int, double> luminance)
+    public void ColorPatches(List<double> luminance)
     {
         if (circleInstances == null) return;
 
-        foreach (var pair in luminance)
+        for (int i = 0; i < luminance.Count; i++)
         {
-            int index = pair.Key;
-            double value = pair.Value;
-
-            if (index < 0 || index >= circleInstances.Length)
+            if (i >= circleInstances.Length)
                 continue;
 
-            GameObject circle = circleInstances[index];
+            GameObject circle = circleInstances[i];
 
             if (circle == null) continue;
 
-            Color newColor = ColorFromValue(value);
+            Color newColor = ColorFromValue(luminance[i]);
 
             Renderer rend = circle.GetComponent<Renderer>();
             if (rend != null)
@@ -71,7 +69,7 @@ public class TregenzaRayCasting : MonoBehaviour
 
             TextMeshPro text = circle.GetComponentInChildren<TextMeshPro>();
             if (text != null)
-                text.text = (index + 1).ToString();
+                text.text = (i + 1).ToString();
         }
     }
 

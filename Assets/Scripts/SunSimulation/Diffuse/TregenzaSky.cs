@@ -100,17 +100,17 @@ public static class TregenzaSky
         return RayDirections;
     }
 
-    public static List<float> GetIncidentAngle(Vector3 normal)
+    public static List<float> GetIncidentAngleCos(Vector3 normal)
     {
-        // Calcular el ángulo incidente de cada rayo de tregenza
+        // Calcular el cos del ángulo incidente de cada rayo de tregenza
 
-        List<float> incidentAngles = new List<float>();
+        List<float> incidentAnglesCos = new List<float>();
 
         for (int i = 0; i < RayDirections.Count; i++)
         {
-            incidentAngles.Add(Vector3.Angle(-RayDirections[i], normal));
+            incidentAnglesCos.Add(Mathf.Cos(Vector3.Angle(RayDirections[i], normal) * Mathf.Deg2Rad));
         }
 
-        return incidentAngles;
+        return incidentAnglesCos;
     }
 }
