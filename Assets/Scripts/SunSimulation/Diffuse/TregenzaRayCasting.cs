@@ -6,15 +6,15 @@ using TMPro;
 public class TregenzaRayCasting : MonoBehaviour
 {
     [Header("Raycast Settings")]
-    [SerializeField] private float rayDistance = 50f;
+    [SerializeField] public float rayDistance = 50f;
     [SerializeField] private LayerMask layerMask;
-    [SerializeField] private bool northIsZero = true;
+    [SerializeField] public bool northIsZero = true;
 
     [Header("Debugging")]
     [SerializeField] private GameObject circlePrefab;
     [SerializeField] private float diskRadius = 5f;
-    [SerializeField] private bool drawLines = true;
-    [SerializeField] private bool drawDisks = true;
+    [SerializeField] public bool drawLines = true;
+    [SerializeField] public bool drawDisks = true;
     [SerializeField] private Color color0;
     [SerializeField] private Color color1;
     [SerializeField] private bool forwardHue = true;
