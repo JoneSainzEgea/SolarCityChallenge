@@ -22,7 +22,7 @@ public class FlyCamera : MonoBehaviour
 
     void Start()
     {
-        LockCursor(true);
+        LockCursor(false);
     }
 
     void Update()

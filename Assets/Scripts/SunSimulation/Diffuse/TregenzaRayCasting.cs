@@ -5,19 +5,21 @@ using TMPro;
 
 public class TregenzaRayCasting : MonoBehaviour
 {
+    public float rayDistance { get; set; }
     [Header("Raycast Settings")]
-    [SerializeField] public float rayDistance = 50f;
     [SerializeField] private LayerMask layerMask;
-    [SerializeField] public bool northIsZero = true;
+    public bool northIsZero { get; set; }
 
     [Header("Debugging")]
     [SerializeField] private GameObject circlePrefab;
     [SerializeField] private float diskRadius = 5f;
-    [SerializeField] public bool drawLines = true;
-    [SerializeField] public bool drawDisks = true;
-    [SerializeField] private Color color0;
-    [SerializeField] private Color color1;
-    [SerializeField] private bool forwardHue = true;
+    public bool drawLines { get; set; }
+    public bool drawDisks { get; set; }
+    [SerializeField] private FlexibleColorPicker colorPicker0;
+    [SerializeField] private FlexibleColorPicker colorPicker1;
+    private Color color0;
+    private Color color1;
+    public bool forwardHue { get; set; }
 
     private List<Vector3> rayDirections = new List<Vector3>(145);
     private List<bool> raycastHit = new List<bool>(145);
@@ -25,6 +27,13 @@ public class TregenzaRayCasting : MonoBehaviour
 
     private void Awake()
     {
+        rayDistance = 50f;
+        northIsZero = true;
+        drawLines = false;
+        drawDisks = true;
+        color0 = Color.blue;
+        color1 = Color.red;
+        forwardHue = false;
         TregenzaSky.GenertePatches(northIsZero);
         rayDirections = TregenzaSky.GetDirections();
     }
@@ -125,6 +134,10 @@ public class TregenzaRayCasting : MonoBehaviour
         float v = Mathf.Clamp01((float)value);
 
         float hue0, hue1, sat, bright;
+        if(colorPicker0 != null)
+            color0 = colorPicker0.color;
+        if (colorPicker1 != null)
+            color1 = colorPicker1.color;
         Color.RGBToHSV(color0, out hue0, out sat, out bright);
         Color.RGBToHSV(color1, out hue1, out sat, out bright);
 
