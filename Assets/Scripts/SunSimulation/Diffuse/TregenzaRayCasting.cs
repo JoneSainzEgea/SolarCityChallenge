@@ -13,8 +13,9 @@ public class TregenzaRayCasting : MonoBehaviour
     [Header("Debugging")]
     [SerializeField] private GameObject circlePrefab;
     [SerializeField] private float diskRadius = 5f;
-    public bool drawLines { get; set; }
+    [SerializeField] private bool drawLines;
     public bool drawDisks { get; set; }
+
     [SerializeField] private FlexibleColorPicker colorPicker0;
     [SerializeField] private FlexibleColorPicker colorPicker1;
     private Color color0;

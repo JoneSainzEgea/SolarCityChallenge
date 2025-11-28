@@ -14,43 +14,49 @@ public class DiffuseRadianceCalculation : MonoBehaviour
     
     [SerializeField] private LuminanceCSVReading luminanceCSV;
     [SerializeField] private TregenzaRayCasting raycasting;
-    [SerializeField] private DatePicker datePicker;
 
     private int year = 2025;
     private int month = 5;
     private int day = 27;
-    public float hour { get; set; }
-    public float minutes { get; set; }
+    private int hour = 12;
+    private int minutes = 0;
+
 
     private void Start()
     {
-        hour = 12f;
-        minutes = 0;
         UpdateDiffuseRadiance();
     }
 
     public void UpdateDiffuseRadiance()
     {
         raycastHits.Clear();
-        luminanceValues.Clear();
-        luminanceFromObserver.Clear();
+        if (luminanceValues != null)
+            luminanceValues.Clear();
+        if (luminanceFromObserver != null)
+            luminanceFromObserver.Clear();
 
         raycastHits = raycasting.UpdateRayCasting();
 
+        UpdateDate();
         GetLuminanceValues();
+        if (luminanceValues == null)
+            return;
         SaveLuminanceFromObserver();
         CalculateDiffuseRadiance();
     }
 
+    private void UpdateDate()
+    {
+        year = DataForSimulation.Year;
+        month = DataForSimulation.Month;
+        day = DataForSimulation.Day;
+        hour = (int)DataForSimulation.Hour;
+        minutes = (int)DataForSimulation.Minutes;
+    }
+
 
     private void GetLuminanceValues()
-    {
-        year = datePicker.SelectedDate.Date.Year;
-        month = datePicker.SelectedDate.Date.Month;
-        day = datePicker.SelectedDate.Date.Day;
-        
-        minutes = (minutes % 5) < 3 ? minutes - (minutes%5) : minutes + (5 - (minutes % 5));
-        
+    {          
         DateTime date = new DateTime(year, month, day, (int)hour, (int)minutes, 0);
 
         string formattedDate = date.ToString("yyyy-MM-dd HH:mm");

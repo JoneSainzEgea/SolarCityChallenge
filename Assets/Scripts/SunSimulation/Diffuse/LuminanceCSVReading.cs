@@ -2,18 +2,49 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
+using SFB;
 using UnityEngine;
+using TMPro;
+using System.Windows.Forms;
 
 public class LuminanceCSVReading : MonoBehaviour
 {
     [SerializeField] private TextAsset luminanceCSV;
+    [SerializeField] private GameObject errorPanel;
+    [SerializeField] private TextMeshProUGUI errorText;
+    private string luminanceData;
+
+    private void Awake()
+    {
+        luminanceData = luminanceCSV.text;
+    }
+
+    public void OpenCSV()
+    {
+        var extensions = new[] {
+            new ExtensionFilter("CSV Files", "csv"),
+            new ExtensionFilter("All Files", "*" ),
+        };
+
+        string[] paths = StandaloneFileBrowser.OpenFilePanel("Seleccionar CSV", "", extensions, false);
+
+        if (paths.Length > 0)
+        {
+            string path = paths[0];
+            Debug.Log("Archivo seleccionado: " + path);
+
+            string loadedCSV = File.ReadAllText(path);
+            luminanceData = loadedCSV;
+        }
+    }
 
     public List<double> GetValues(String date)
     {
         List<double> luminanceValues = new List<double>(145);
 
         // Lectura del CSV
-        string[] lines = luminanceCSV.text.Split('\n');
+        string[] lines = luminanceData.Split('\n');
 
         for (int i = 1; i < lines.Length; i++)
         {
@@ -48,7 +79,15 @@ public class LuminanceCSVReading : MonoBehaviour
             }
         }
 
-        Debug.LogWarning("No se ha encontrado la fecha indicada");
+        ThrowError("No data was found for the specified date.");
         return null;
     }
+
+    private void ThrowError(string error)
+    {
+        errorText.text = error;
+        errorPanel.SetActive(true);
+    }
 }
+
+
