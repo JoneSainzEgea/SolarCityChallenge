@@ -1,5 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
+/* SoundFeedback
+ * Jone Sainz Egea
+ * 03/12/2025
+ * 
+ * Clase que se encarga de la retroalimentación sonora del sistema de construcción.
+ * Recibe el tipo de sonido según el Enum SoundType y lo reproduce una vez.
+ * 
+ * Inspirado en el código de: Sunny Valley Studio, Grid Placement System
+ * v1 -03/12/2025- switch con diferentes tipos de sonidos 
+ * 
+ * TODO: unificar con un AudioManager para que le afecte el ajuste del volumen
+ */
+
 using UnityEngine;
 
 public enum SoundType { Click, Place, Remove, WrongPlacement}

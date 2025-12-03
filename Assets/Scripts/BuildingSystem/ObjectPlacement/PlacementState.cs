@@ -1,5 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
+/* PlacementState
+ * Jone Sainz Egea
+ * 03/12/2025
+ * 
+ * Estado que hereda de la interfaz IBuildingState, implementando sus métodos.
+ * Este estado se encarga de la creación de nuevos objetos, su previsualización, su ubicación, y almacenamiento de la posición en la que se sitúa.
+ * Recibe el ID del objeto que se va a colocar y la información necesaria para revisar la posibilidad de colocarlo y dar retroalimentación al usuario.
+ * 
+ * Inspirado en el código de: Sunny Valley Studio, Grid Placement System
+ * v1 -03/12/2025- Identifica el objeto, lo previsualiza, comprueba que se pueda colocar, llama a colocarlo y almacena la información de su posición, tipo de objeto y tamaño.
+ */
+
 using UnityEngine;
 
 public class PlacementState : IBuildingState
@@ -49,11 +59,14 @@ public class PlacementState : IBuildingState
         }
         soundFeedback.PlaySound(SoundType.Place);
         int index = objectPlacer.PlaceObject(database.objectsData[selectedObjectIndex].Prefab, grid.CellToWorld(gridPosition));
+        
+        // TODO: cambiar la siguiente línea, ahora mismo el objeto 0 es el "suelo", implementar nuevo sistema
         GridData selectedData = database.objectsData[selectedObjectIndex].ID == 0 ? floorData : furnitureData;
         selectedData.AddObjectAt(gridPosition,
             database.objectsData[selectedObjectIndex].Size,
             database.objectsData[selectedObjectIndex].ID,
             index);
+
         previewSystem.UpdatePosition(grid.CellToWorld(gridPosition), false);
     }
     public void UpdateState(Vector3Int gridPosition)

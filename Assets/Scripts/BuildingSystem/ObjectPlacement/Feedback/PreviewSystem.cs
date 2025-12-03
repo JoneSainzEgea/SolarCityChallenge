@@ -1,4 +1,19 @@
-using System;
+/* PreviewSystem
+ * Jone Sainz Egea
+ * 03/12/2025
+ * 
+ * Sistema que se encarga de la previsualización de los elementos de construcción.
+ * Muestra un indicador de celdas en la posición del grid en la que se encuentra el ratón.
+ * Muestra una previsualización semi transparente del objeto que se quiere colocar en su posición.
+ * Aporta retroalimentación de color dependiendo de si es posible realizar la acción en esa casilla o no.
+ * 
+ * Inspirado en el código de: Sunny Valley Studio, Grid Placement System
+ * v1 -03/12/2025- previsualización del cursor y del objeto a colocar con retroalimentación de color.
+ * 
+ * TODO: arreglar que el cell indicator aumente de tamaño según el tamaño del objeto que se previsualiza.
+ * TODO: implementar previsualización cuando se va a eliminar un objeto.
+ */
+
 using UnityEngine;
 
 public class PreviewSystem : MonoBehaviour

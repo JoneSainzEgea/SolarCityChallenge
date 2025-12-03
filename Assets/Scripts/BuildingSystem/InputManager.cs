@@ -1,6 +1,15 @@
+/* InputManager
+ * Jone Sainz Egea
+ * 03/12/2025
+ * 
+ * Clase que se encarga de la lectura de inputs y llamadas a las acciones de cada input.
+ * Lee la posición del mapa en la que está el cursor.
+ * 
+ * Inspirado en el código de: Sunny Valley Studio, Grid Placement System
+ * v1 -03/12/2025- acciones de click y escape.
+ */
+
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 

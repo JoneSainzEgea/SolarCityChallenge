@@ -1,6 +1,18 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+/* RemovingState
+ * Jone Sainz Egea
+ * 03/12/2025
+ * 
+ * Estado que hereda de la interfaz IBuildingState, implementando sus métodos.
+ * Este estado se encarga de la eliminación de objetos existentes en el grid.
+ * Recibe el ID del objeto que se va a colocar y la información necesaria para revisar la posibilidad de colocarlo y dar retroalimentación al usuario.
+ * 
+ * Inspirado en el código de: Sunny Valley Studio, Grid Placement System
+ * v1 -03/12/2025- comprueba que no se puede colocar un objeto en esa posición, elimina el objeto que hay en esa posición y lo elimina del almacenamiento del GridData.
+ * 
+ * 
+ * TODO: añadir previsualización que muestra el objeto de la escena en rojo si se va a eliminar
+ */
+
 using UnityEngine;
 
 public class RemovingState : IBuildingState
@@ -67,6 +79,7 @@ public class RemovingState : IBuildingState
         previewSystem.StopShowingPreview();
     }
 
+    // Cuando no se puede colocar un objeto en esa posición devuelve true, hay un objeto que se puede eliminar en esa casilla
     private bool CheckIfSelectionIsValid(Vector3Int gridPosition)
     {
         return !(furnitureData.CanPlaceObjectAt(gridPosition, Vector2Int.one) && floorData.CanPlaceObjectAt(gridPosition, Vector2Int.one));

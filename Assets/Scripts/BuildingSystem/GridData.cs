@@ -1,5 +1,19 @@
+/* GridData
+ * Jone Sainz Egea
+ * 03/12/2025
+ * 
+ * Clase que se encarga del almacenamiento de la información de los objetos que hay sobre el grid.
+ * Almacena la información del objeto colocado según su posición, tamaño, ID y el índice del orden de almacenamiento de la lista.
+ * Calcula las posiciones que ocupa el objeto en el grid según su tamaño.
+ * Devuelve el valor de si una casilla está ocupada o no.
+ * Borra objetos eliminados de la lista.
+ * Devuelve el valor del índice de la lista de objetos colocados.
+ * 
+ * Inspirado en el código de: Sunny Valley Studio, Grid Placement System
+ * v1 -03/12/2025- almacenamiento de objetos en el grid según su posición, ID, tamaño e índice.
+ */
+
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -61,6 +75,13 @@ public class GridData
         }
     }
 }
+
+/* PlacementData
+ *
+ * Clase que se utiliza para almacenar la información de los objetos del grid.
+ * Contiene una lista con las posiciones que ocupa el objeto, el ID del objeto almacenado y el índice de la lista de objetos.
+ *
+ */
 
 public class PlacementData
 {
