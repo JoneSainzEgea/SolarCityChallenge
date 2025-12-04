@@ -18,14 +18,14 @@ public class InputManager : MonoBehaviour
     [SerializeField] private Camera sceneCamera;
     private Vector3 lastPosition;
     [SerializeField] private LayerMask placementLayerMask;
-    public event Action OnMousePressed, OnMouseReleased, OnCancel, OnUndo;
-    public event Action<int> OnRotate;
-    public event Action<bool> OnToggleDelete;
+    //public event Action OnMousePressed, OnMouseReleased, OnCancel, OnUndo;
+    //public event Action<int> OnRotate;
+    //public event Action<bool> OnToggleDelete;
 
     public Vector3 GetSelectedMapPosition()
     {
         Vector3 mousePos = Input.mousePosition;
-        mousePos.z = sceneCamera.nearClipPlane;
+        mousePos.z = sceneCamer.nearClipPlane;
         Ray ray = sceneCamera.ScreenPointToRay(mousePos);
         RaycastHit hit;
         Debug.DrawRay(ray.origin, ray.direction * 100, Color.red);
@@ -42,7 +42,6 @@ public class InputManager : MonoBehaviour
     private void Update()
     {
         if (Input.GetMouseButtonDown(0))
-        {
             OnMousePressed?.Invoke();
         }
         

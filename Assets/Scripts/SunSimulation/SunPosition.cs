@@ -1,161 +1,46 @@
 
-// Código original de Mikael (usuario en Blogger). Fuente: https://guideving.blogspot.com/2010/08/sun-position-in-c.html
-// v1 - 05/11/2025: calcula al altitud y el azimut del sol dada una fecha, latitud y longitud. Utiliza fecha juliana y tiempo sideral.
+// Jone Sainz Egea
+// v1 - 05/11/2025: clase con la información de fecha y hora, latitud y longitud. Llama al método CalculateSunPosition de la clase SunPosition.
 
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Windows.Forms;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class SunPosition : MonoBehaviour
 {
-    private const double Deg2Rad = Math.PI / 180.0;
-    private const double Rad2Deg = 180.0 / Math.PI;
+    private DateTime date;
+    private double latitude;
+    private double longitude;
 
-    private double altitude;
-    private double azimuth;
+    private SunPositionMath sunPositionMath;
 
+    [SerializeField] private GameObject sunDirectionalLight;
 
-    /*!
-     * \brief Calculates the sun light.
-     *
-     * CalcSunPosition calculates the suns "position" based on a
-     * given date and time in local time, latitude and longitude
-     * expressed in decimal degrees.
-     * The calculation is only satisfiably correct for dates in
-     * the range March 1 1900 to February 28 2100.
-     * \param dateTime Time and date in local time.
-     * \param latitude Latitude expressed in decimal degrees.
-     * \param longitude Longitude expressed in decimal degrees.
-     */
-    public void CalculateSunPosition(DateTime dateTime, double latitude, double longitude, GameObject sun)
+    private void Start()
     {
-        // Convert to UTC
-        dateTime = dateTime.ToUniversalTime();
+        sunPositionMath = GetComponent<SunPositionMath>();
 
-        // Number of days from J2000.0.
-        double julianDate = 367 * dateTime.Year -
-            (int)((7.0 / 4.0) * (dateTime.Year +
-            (int)((dateTime.Month + 9.0) / 12.0))) +
-            (int)((275.0 * dateTime.Month) / 9.0) +
-            dateTime.Day - 730531.5;
+        // Coordenadas de Burgos
+        latitude = 42.35079519629251;
+        longitude = -3.6877558759138362;
 
-        double julianCenturies = julianDate / 36525.0;
-
-        // Sidereal Time
-        double siderealTimeHours = 6.6974 + 2400.0513 * julianCenturies;
-
-        double siderealTimeUT = siderealTimeHours +
-            (366.2422 / 365.2422) * (double)dateTime.TimeOfDay.TotalHours;
-
-        double siderealTime = siderealTimeUT * 15 + longitude;
-
-        // Refine to number of days (fractional) to specific time.
-        julianDate += (double)dateTime.TimeOfDay.TotalHours / 24.0;
-        julianCenturies = julianDate / 36525.0;
-
-        // Solar Coordinates
-        double meanLongitude = CorrectAngle(Deg2Rad *
-            (280.466 + 36000.77 * julianCenturies));
-
-        double meanAnomaly = CorrectAngle(Deg2Rad *
-            (357.529 + 35999.05 * julianCenturies));
-
-        double equationOfCenter = Deg2Rad * ((1.915 - 0.005 * julianCenturies) *
-            Math.Sin(meanAnomaly) + 0.02 * Math.Sin(2 * meanAnomaly));
-
-        double elipticalLongitude =
-            CorrectAngle(meanLongitude + equationOfCenter);
-
-        double obliquity = (23.439 - 0.013 * julianCenturies) * Deg2Rad;
-
-        // Right Ascension
-        double rightAscension = Math.Atan2(
-            Math.Cos(obliquity) * Math.Sin(elipticalLongitude),
-            Math.Cos(elipticalLongitude));
-
-        double declination = Math.Asin(
-            Math.Sin(rightAscension) * Math.Sin(obliquity));
-
-        // Horizontal Coordinates
-        double hourAngle = CorrectAngle(siderealTime * Deg2Rad) - rightAscension;
-
-        if (hourAngle > Math.PI)
-        {
-            hourAngle -= 2 * Math.PI;
-        }
-
-        altitude = Math.Asin(Math.Sin(latitude * Deg2Rad) *
-            Math.Sin(declination) + Math.Cos(latitude * Deg2Rad) *
-            Math.Cos(declination) * Math.Cos(hourAngle));
-
-        // Nominator and denominator for calculating Azimuth
-        // angle. Needed to test which quadrant the angle is in.
-        double aziNom = -Math.Sin(hourAngle);
-        double aziDenom =
-            Math.Tan(declination) * Math.Cos(latitude * Deg2Rad) -
-            Math.Sin(latitude * Deg2Rad) * Math.Cos(hourAngle);
-
-        azimuth = Math.Atan(aziNom / aziDenom);
-
-        if (aziDenom < 0) // In 2nd or 3rd quadrant
-        {
-            azimuth += Math.PI;
-        }
-        else if (aziNom < 0) // In 4th quadrant
-        {
-            azimuth += 2 * Math.PI;
-        }
-
-        // Altitude
-        Debug.Log("Altitude: " + altitude * Rad2Deg);
-
-        // Azimut
-        Debug.Log("Azimuth: " + azimuth * Rad2Deg);
-
-
-        RotateDirectionalLight(sun);
-    }
-
-    /*!
-    * \brief Corrects an angle.
-    *
-    * \param angleInRadians An angle expressed in radians.
-    * \return An angle in the range 0 to 2*PI.
-    */
-    private static double CorrectAngle(double angleInRadians)
-    {
-        if (angleInRadians < 0)
-        {
-            return 2 * Math.PI - (Math.Abs(angleInRadians) % (2 * Math.PI));
-        }
-        else if (angleInRadians > 2 * Math.PI)
-        {
-            return angleInRadians % (2 * Math.PI);
-        }
-        else
-        {
-            return angleInRadians;
-        }
+        UpdateSunPosition();
     }
 
 
-    private void RotateDirectionalLight(GameObject sun)
+    public void UpdateSunPosition()
     {
-        float sphereOffset = 30;
-        sun.transform.eulerAngles = new Vector3((float)(altitude * Rad2Deg), (float)(azimuth * Rad2Deg), 0);
-        transform.position = new Vector3((float)(sphereOffset * Math.Cos(azimuth)), (float)(sphereOffset * Math.Sin(altitude)), (float)(sphereOffset * Math.Sin(azimuth)));
+        UpdateDate();
+
+        // Llamada al cálculo de la altura y el azimut solar
+        sunPositionMath.CalculateSunPosition(date, latitude, longitude, sunDirectionalLight);
     }
 
-    // Función que convierta de día y mes a dn
-    // Cálculo del day angle (2*Pi*(dn-1)/365)
-    // Cálculo de Et
-    // Función que convierta la hora a LAT (corrección horaria)
-    // Cálculo del ángulo horario
-    // Cálculo del solar declination
-    // Cálculo de la altura solar
-    // Cálculo del azimuth solar
-
-
-    // Paso 1: dada una ubicación y fecha situa al sol tomando al observador como referencia
+    private void UpdateDate()
+    {
+        date = new DateTime(DataForSimulation.Year, DataForSimulation.Month, DataForSimulation.Day, (int)DataForSimulation.Hour, (int)DataForSimulation.Minutes, 0);
+    }
 }
