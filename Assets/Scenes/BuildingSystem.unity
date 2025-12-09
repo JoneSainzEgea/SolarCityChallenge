@@ -411,9 +411,9 @@ RectTransform:
   - {fileID: 585756081}
   m_Father: {fileID: 572121663}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 305.1562, y: -150}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 150, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &121926238
@@ -559,7 +559,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 890ff16e7cb2fbe4f9407fb499bd05b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resourcesDataBase: {fileID: 0}
+  resourcesDataBase: {fileID: 11400000, guid: 156851e48a7d96b42b6e4b56592274ff, type: 2}
+  resourcesUI: {fileID: 1115492526}
 --- !u!1 &242114839
 GameObject:
   m_ObjectHideFlags: 0
@@ -615,7 +616,7 @@ GameObject:
   - component: {fileID: 263765502}
   - component: {fileID: 263765503}
   m_Layer: 5
-  m_Name: ResourceInfo (1)
+  m_Name: EnergyInfo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -864,7 +865,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.04484742, g: 1, b: 0.042452812, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1139,7 +1140,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 0.9197526, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1198,9 +1199,9 @@ RectTransform:
   - {fileID: 1227108200}
   m_Father: {fileID: 572121663}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 665.36444, y: -150}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 150, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &764482356
@@ -1827,6 +1828,7 @@ GameObject:
   - component: {fileID: 1115492523}
   - component: {fileID: 1115492525}
   - component: {fileID: 1115492524}
+  - component: {fileID: 1115492526}
   m_Layer: 5
   m_Name: ResourcesPanel
   m_TagString: Untagged
@@ -1892,6 +1894,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1115492522}
   m_CullTransparentMesh: 1
+--- !u!114 &1115492526
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1115492522}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d755422afeb8cfb4e87a26ca7477b533, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moneyText: {fileID: 1282823525}
+  energyText: {fileID: 1894061760}
 --- !u!1 &1146934613
 GameObject:
   m_ObjectHideFlags: 0
@@ -1941,6 +1957,7 @@ MonoBehaviour:
   database: {fileID: 11400000, guid: f0ac367406e161d4d9c5d0a4b8285489, type: 2}
   gridVisualization: {fileID: 780920145}
   preview: {fileID: 1290296257}
+  resourceManagement: {fileID: 217777175}
   objectPlacer: {fileID: 242114840}
   soundFeedback: {fileID: 323194991}
 --- !u!1 &1227108199
@@ -2111,9 +2128,9 @@ RectTransform:
   - {fileID: 1341593151}
   m_Father: {fileID: 572121663}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 485.2603, y: -150}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 150, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1247718541
@@ -2222,7 +2239,7 @@ GameObject:
   - component: {fileID: 1282823526}
   - component: {fileID: 1282823525}
   m_Layer: 5
-  m_Name: ResourceAmount
+  m_Name: MoneyAmount
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2502,9 +2519,9 @@ RectTransform:
   - {fileID: 1895158381}
   m_Father: {fileID: 572121663}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 125.05206, y: -150}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 150, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1332740623
@@ -2752,7 +2769,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1400178625
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3291,7 +3308,7 @@ GameObject:
   - component: {fileID: 1894061761}
   - component: {fileID: 1894061760}
   m_Layer: 5
-  m_Name: ResourceAmount
+  m_Name: EnergyAmount
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3336,7 +3353,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: MoneyAmount
+  m_text: EnergyAmount
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -3664,7 +3681,7 @@ GameObject:
   - component: {fileID: 1984142208}
   - component: {fileID: 1984142209}
   m_Layer: 5
-  m_Name: ResourceInfo
+  m_Name: MoneyInfo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

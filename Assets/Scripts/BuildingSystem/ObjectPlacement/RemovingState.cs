@@ -18,17 +18,20 @@ using UnityEngine;
 public class RemovingState : IBuildingState
 {
     private int gameObjectIndex = -1;
+    private int gameObjectID = -1;
     Grid grid;
     PreviewSystem previewSystem;
+    ObjectsDatabaseSO database;
     GridData floorData;
     GridData furnitureData;
     ObjectPlacer objectPlacer;
     SoundFeedback soundFeedback;
 
-    public RemovingState(Grid grid, PreviewSystem previewSystem, GridData floorData, GridData furnitureData, ObjectPlacer objectPlacer, SoundFeedback soundFeedback)
+    public RemovingState(Grid grid, PreviewSystem previewSystem, ObjectsDatabaseSO database, GridData floorData, GridData furnitureData, ObjectPlacer objectPlacer, SoundFeedback soundFeedback)
     {
         this.grid = grid;
         this.previewSystem = previewSystem;
+        this.database = database;
         this.floorData = floorData;
         this.furnitureData = furnitureData;
         this.objectPlacer = objectPlacer;
@@ -40,7 +43,7 @@ public class RemovingState : IBuildingState
         previewSystem.StartShowingRemovePreview();
     }
 
-    public void OnAction(Vector3Int gridPosition)
+    public bool OnAction(Vector3Int gridPosition)
     {
         GridData selectedData = null;
         if(furnitureData.CanPlaceObjectAt(gridPosition, Vector2Int.one) == false)
@@ -55,23 +58,32 @@ public class RemovingState : IBuildingState
         if(selectedData == null)
         {
             soundFeedback.PlaySound(SoundType.WrongPlacement);
+            return false;
         }
         else
         {
             gameObjectIndex = selectedData.GetRepresentationIndex(gridPosition);
-            if (gameObjectIndex == -1)
-                return;
+            gameObjectID = selectedData.GetRepresentationID(gridPosition);
+            if (gameObjectIndex == -1 || gameObjectID == -1)
+                return false;
             soundFeedback.PlaySound(SoundType.Remove);
             selectedData.RemoveObjectAt(gridPosition);
             objectPlacer.RemoveObjectAt(gameObjectIndex);
         }
         Vector3 cellPosition = grid.CellToWorld(gridPosition);
         previewSystem.UpdatePosition(cellPosition, CheckIfSelectionIsValid(gridPosition));
+        return true;
     }
     public void UpdateState(Vector3Int gridPosition)
     {
         bool validity = CheckIfSelectionIsValid(gridPosition);
         previewSystem.UpdatePosition(grid.CellToWorld(gridPosition), validity);
+    }
+
+    public void UpdateResources(ResourceManagement resourceManagement)
+    {
+        resourceManagement.AddResource(ResourceType.Money, database.objectsData[gameObjectID].Prize);
+        resourceManagement.RemoveResource(ResourceType.Energy, database.objectsData[gameObjectID].EnergyProduction);
     }
 
     public void EndState()

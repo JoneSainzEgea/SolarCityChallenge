@@ -6,6 +6,7 @@ using UnityEngine;
 public class ResourceManagement : MonoBehaviour
 {
     [SerializeField] private ResourcesDatabaseSO resourcesDataBase;
+    [SerializeField] ResourcesUI resourcesUI;
     private Dictionary<int, float> resourceDictionary = new();
 
     private void Start()
@@ -14,16 +15,21 @@ public class ResourceManagement : MonoBehaviour
     }
 
 
-    public void AddResource(int  resourceID, float amount)
+    public void AddResource(ResourceType resourceType, float amount)
     {
+        int resourceID = GetResourceID(resourceType);
+
         if (!resourceDictionary.ContainsKey(resourceID))
             return;
 
         resourceDictionary[resourceID] += amount;
+        UpdateResourcesUI();
     }
 
-    public void RemoveResource(int resourceID, float amount)
+    public void RemoveResource(ResourceType resourceType, float amount)
     {
+        int resourceID = GetResourceID(resourceType);
+
         if (!resourceDictionary.ContainsKey(resourceID))
             return;
 
@@ -31,6 +37,8 @@ public class ResourceManagement : MonoBehaviour
 
         if (resourceDictionary[resourceID] < 0)
             resourceDictionary[resourceID] = 0f;
+
+        UpdateResourcesUI();
     }
 
     public int GetResourceID(ResourceType resourceType)
@@ -45,6 +53,13 @@ public class ResourceManagement : MonoBehaviour
         return -1;
     }
 
+    public float GetResourceAmount(int resourceID)
+    {
+        if (!resourceDictionary.ContainsKey(resourceID))
+            return -1;
+        return resourceDictionary[resourceID];
+    }
+
     public void RestartAllResources()
     {
         resourceDictionary.Clear();
@@ -54,5 +69,17 @@ public class ResourceManagement : MonoBehaviour
             if (!resourceDictionary.ContainsKey(resource.ID))
                 resourceDictionary.Add(resource.ID, resource.InitialAmount);
         }
+
+        UpdateResourcesUI();
+    }
+
+    private void UpdateResourcesUI()
+    {
+        // TODO: hacer esto escalable
+        
+        float moneyValue = resourceDictionary[GetResourceID(ResourceType.Money)];
+        float energyValue = resourceDictionary[GetResourceID(ResourceType.Energy)];
+
+        resourcesUI.UpdateTextValues(moneyValue, energyValue);
     }
 }

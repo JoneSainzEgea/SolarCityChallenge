@@ -15,7 +15,8 @@ using UnityEngine;
 public interface IBuildingState
 {
     void EnterState();
-    void OnAction(Vector3Int gridPosition);
+    bool OnAction(Vector3Int gridPosition);
     void UpdateState(Vector3Int gridPosition);
+    void UpdateResources(ResourceManagement resourceManagement);
     void EndState();
 }

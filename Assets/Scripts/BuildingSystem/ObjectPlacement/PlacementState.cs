@@ -10,6 +10,7 @@
  * v1 -03/12/2025- Identifica el objeto, lo previsualiza, comprueba que se pueda colocar, llama a colocarlo y almacena la información de su posición, tipo de objeto y tamaño.
  */
 
+using System;
 using UnityEngine;
 
 public class PlacementState : IBuildingState
@@ -49,13 +50,19 @@ public class PlacementState : IBuildingState
             throw new System.Exception($"No object with ID {ID}");
     }
 
-    public void OnAction(Vector3Int gridPosition)
+    public bool OnAction(Vector3Int gridPosition)
     {
         bool placementValidity = CheckPlacementValidity(gridPosition, selectedObjectIndex);
         if (placementValidity == false)
         {
             soundFeedback.PlaySound(SoundType.WrongPlacement);
-            return;
+            return false;
+        }
+        bool moneyValidity = CheckMoneyValidity();
+        if (moneyValidity == false)
+        {
+            soundFeedback.PlaySound(SoundType.WrongPlacement);
+            return false;
         }
         soundFeedback.PlaySound(SoundType.Place);
         int index = objectPlacer.PlaceObject(database.objectsData[selectedObjectIndex].Prefab, grid.CellToWorld(gridPosition));
@@ -68,12 +75,19 @@ public class PlacementState : IBuildingState
             index);
 
         previewSystem.UpdatePosition(grid.CellToWorld(gridPosition), false);
+        return true;
     }
+
     public void UpdateState(Vector3Int gridPosition)
     {
         bool placementValidity = CheckPlacementValidity(gridPosition, selectedObjectIndex);
 
         previewSystem.UpdatePosition(grid.CellToWorld(gridPosition), placementValidity);
+    }
+    public void UpdateResources(ResourceManagement resourceManagement)
+    {
+        resourceManagement.RemoveResource(ResourceType.Money, database.objectsData[selectedObjectIndex].Prize);
+        resourceManagement.AddResource(ResourceType.Energy, database.objectsData[selectedObjectIndex].EnergyProduction);
     }
 
     public void EndState()
@@ -88,4 +102,8 @@ public class PlacementState : IBuildingState
         return selectedData.CanPlaceObjectAt(gridPosition, database.objectsData[selectedObjectIndex].Size);
     }
 
+    private bool CheckMoneyValidity()
+    {
+        throw new NotImplementedException();
+    }
 }

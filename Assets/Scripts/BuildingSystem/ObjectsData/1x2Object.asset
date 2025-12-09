@@ -14,5 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ObjectData
   <Name>k__BackingField: Placa1x2
   <ID>k__BackingField: 1
+  <Prize>k__BackingField: 100
+  <EnergyProduction>k__BackingField: 50
   <Size>k__BackingField: {x: 1, y: 2}
   <Prefab>k__BackingField: {fileID: 2011649031004302560, guid: e08dc79e74ec38945b212ced245651f4, type: 3}
