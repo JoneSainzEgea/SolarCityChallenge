@@ -1,11 +1,12 @@
 /* ResourceDataSO
  * Jone Sainz Egea
- * 05/12/2025
+ * 03/12/2025
  * 
  * ScriptableObject para tener la información de cada recurso que afecta al juego.
- * Los objetos tienen: ID único, nombre y Sprite asociado al recurso.
+ * Los objetos tienen: ID único, nombre, tipo de recurso, cantidad inicial y Sprite asociado al recurso.
  * 
  * v1 -03/12/2025- ID, nombre y sprite.
+ * v2 -05/12/2025- ResourceType, initialAmount
  */
 
 using System;

@@ -4,10 +4,11 @@
  * 
  * La clase PlacementSystem se encarga de la comunicación de todo lo que tiene que ver con el sistema de construcción.
  * Recibe toda la información necesaria para ello: input, grid y su visualización, objetos, tipos de objetos y su previsualización, sonidos.
- * Desde este script se gestiona el comienzo y fin de la construcción y demolición.
+ * Desde este script se gestiona el comienzo y fin de la construcción y demolición, y los efectos sobre los recursos.
  * 
  * Inspirado en el código de: Sunny Valley Studio, Grid Placement System
  * v1 -03/12/2025- construcción y demolición utilizando distintos tipos de objetos
+ * v2 -09/12/2025- añadido de conexión con ResourceManagement e implementación de UpdateResources
  */
 
 using UnityEngine;
@@ -62,7 +63,7 @@ public class PlacementSystem : MonoBehaviour
         StopPlacement();
         gridVisualization.SetActive(true);
 
-        buildingState = new PlacementState(ID, grid, preview, database, floorData, furnitureData, objectPlacer, soundFeedback);
+        buildingState = new PlacementState(ID, grid, preview, database, floorData, furnitureData, objectPlacer, resourceManagement, soundFeedback);
         buildingState.EnterState();
 
         inputManager.OnMousePressed += PlaceStructure;
@@ -74,7 +75,7 @@ public class PlacementSystem : MonoBehaviour
         StopPlacement();
         gridVisualization.SetActive(true);
 
-        buildingState = new RemovingState(grid, preview, database, floorData, furnitureData, objectPlacer, soundFeedback);
+        buildingState = new RemovingState(grid, preview, database, floorData, furnitureData, objectPlacer, resourceManagement, soundFeedback);
         buildingState.EnterState();
 
         inputManager.OnMousePressed += PlaceStructure;
@@ -91,7 +92,7 @@ public class PlacementSystem : MonoBehaviour
         Vector3Int gridPosition = grid.WorldToCell(mousePos);
 
         if (buildingState.OnAction(gridPosition))
-            buildingState.UpdateResources(resourceManagement);
+            buildingState.UpdateResources();
     }
 
     private void StopPlacement()

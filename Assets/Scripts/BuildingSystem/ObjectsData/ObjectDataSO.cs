@@ -9,7 +9,7 @@
  * v1 -03/12/2025- ID, nombre, tamaño 2D y prefab del objeto.
  * v2 -09/12/2025- Precio y producción de energía
  * 
- * TODO: ampliar a dimensión vertical.
+ * TODO: ampliar a dimensión vertical, posibilidad de que se venda a otro precio
  */
 
 using System;

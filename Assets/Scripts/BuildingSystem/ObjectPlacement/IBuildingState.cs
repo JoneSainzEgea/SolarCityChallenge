@@ -3,11 +3,12 @@
  * 03/12/2025
  * 
  * Interfaz que define cómo serán los diferentes estados de construcción.
- * Se definen las funciones de EnterState, OnAction, UpdateState y EndState.
+ * Se definen las funciones de EnterState, OnAction, UpdateState, UpdateResources y EndState.
  * Necesita la información del Vector3Int gridPosition.
  * 
  * Inspirado en el código de: Sunny Valley Studio, Grid Placement System
  * v1 -03/12/2025- EnterState, OnAction, UpdateState y EndState
+ * v2 -09/12/2025- UpdateResources
  */
 
 using UnityEngine;
@@ -17,6 +18,6 @@ public interface IBuildingState
     void EnterState();
     bool OnAction(Vector3Int gridPosition);
     void UpdateState(Vector3Int gridPosition);
-    void UpdateResources(ResourceManagement resourceManagement);
+    void UpdateResources();
     void EndState();
 }

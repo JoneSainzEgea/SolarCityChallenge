@@ -5,9 +5,11 @@
  * Estado que hereda de la interfaz IBuildingState, implementando sus métodos.
  * Este estado se encarga de la creación de nuevos objetos, su previsualización, su ubicación, y almacenamiento de la posición en la que se sitúa.
  * Recibe el ID del objeto que se va a colocar y la información necesaria para revisar la posibilidad de colocarlo y dar retroalimentación al usuario.
+ * Actauliza la información del dinero y la energía después de colocarlo.
  * 
  * Inspirado en el código de: Sunny Valley Studio, Grid Placement System
  * v1 -03/12/2025- Identifica el objeto, lo previsualiza, comprueba que se pueda colocar, llama a colocarlo y almacena la información de su posición, tipo de objeto y tamaño.
+ * v2 -09/12/2025- Comprueba que haya dinero suficiente, actualiza valores de dinero y energía.
  */
 
 using System;
@@ -23,9 +25,10 @@ public class PlacementState : IBuildingState
     GridData floorData;
     GridData furnitureData;
     ObjectPlacer objectPlacer;
+    ResourceManagement resourceManagement;
     SoundFeedback soundFeedback;
 
-    public PlacementState(int iD, Grid grid, PreviewSystem previewSystem, ObjectsDatabaseSO database, GridData floorData, GridData furnitureData, ObjectPlacer objectPlacer, SoundFeedback soundFeedback)
+    public PlacementState(int iD, Grid grid, PreviewSystem previewSystem, ObjectsDatabaseSO database, GridData floorData, GridData furnitureData, ObjectPlacer objectPlacer, ResourceManagement resourceManagement, SoundFeedback soundFeedback)
     {
         ID = iD;
         this.grid = grid;
@@ -34,6 +37,7 @@ public class PlacementState : IBuildingState
         this.floorData = floorData;
         this.furnitureData = furnitureData;
         this.objectPlacer = objectPlacer;
+        this.resourceManagement = resourceManagement;
         this.soundFeedback = soundFeedback;
     }
 
@@ -84,7 +88,7 @@ public class PlacementState : IBuildingState
 
         previewSystem.UpdatePosition(grid.CellToWorld(gridPosition), placementValidity);
     }
-    public void UpdateResources(ResourceManagement resourceManagement)
+    public void UpdateResources()
     {
         resourceManagement.RemoveResource(ResourceType.Money, database.objectsData[selectedObjectIndex].Prize);
         resourceManagement.AddResource(ResourceType.Energy, database.objectsData[selectedObjectIndex].EnergyProduction);
@@ -104,6 +108,8 @@ public class PlacementState : IBuildingState
 
     private bool CheckMoneyValidity()
     {
-        throw new NotImplementedException();
+        if (resourceManagement.GetResourceAmount(ResourceType.Money) < database.objectsData[selectedObjectIndex].Prize)
+            return false;
+        return true;
     }
 }

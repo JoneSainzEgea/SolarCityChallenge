@@ -1,6 +1,16 @@
-using System.Collections;
+/* ResourceManagement
+ * Jone Sainz Egea
+ * 05/12/2025
+ * 
+ * Script que gestiona toda la información relativa a los recursos cuantitativos.
+ * Contiene un diccionario en el que almacena el ID del recurso y su cantidad.
+ * Se encarga de la comunicación con ResourcesUI para la visualización de cantidades.
+ * Contiene métodos públicos para añadir recursos, quitar recursos, obtener cantidad del recurso y reiniciar recursos.
+ * 
+ * v1 -05/12/2025- añadir y quitar recursos, obtener cantidad, mostrar en UI, reiniciar cantidades.
+ */
+
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class ResourceManagement : MonoBehaviour
@@ -35,13 +45,15 @@ public class ResourceManagement : MonoBehaviour
 
         resourceDictionary[resourceID] -= amount;
 
+        // TODO: ¿podría la generación ed energía ser negativa?
+
         if (resourceDictionary[resourceID] < 0)
             resourceDictionary[resourceID] = 0f;
 
         UpdateResourcesUI();
     }
 
-    public int GetResourceID(ResourceType resourceType)
+    private int GetResourceID(ResourceType resourceType)
     {
         foreach (var resource in resourcesDataBase.resourcesData)
         {
@@ -53,8 +65,10 @@ public class ResourceManagement : MonoBehaviour
         return -1;
     }
 
-    public float GetResourceAmount(int resourceID)
+    public float GetResourceAmount(ResourceType resourceType)
     {
+        int resourceID = GetResourceID(resourceType);
+
         if (!resourceDictionary.ContainsKey(resourceID))
             return -1;
         return resourceDictionary[resourceID];

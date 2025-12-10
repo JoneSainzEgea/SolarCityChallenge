@@ -5,10 +5,11 @@
  * Estado que hereda de la interfaz IBuildingState, implementando sus métodos.
  * Este estado se encarga de la eliminación de objetos existentes en el grid.
  * Recibe el ID del objeto que se va a colocar y la información necesaria para revisar la posibilidad de colocarlo y dar retroalimentación al usuario.
+ * Actualiza la información del dinero y la energía.
  * 
  * Inspirado en el código de: Sunny Valley Studio, Grid Placement System
  * v1 -03/12/2025- comprueba que no se puede colocar un objeto en esa posición, elimina el objeto que hay en esa posición y lo elimina del almacenamiento del GridData.
- * 
+ * v2 -09/12/2025- actualiza valores de dinero y energía.
  * 
  * TODO: añadir previsualización que muestra el objeto de la escena en rojo si se va a eliminar
  */
@@ -25,9 +26,10 @@ public class RemovingState : IBuildingState
     GridData floorData;
     GridData furnitureData;
     ObjectPlacer objectPlacer;
+    ResourceManagement resourceManagement;
     SoundFeedback soundFeedback;
 
-    public RemovingState(Grid grid, PreviewSystem previewSystem, ObjectsDatabaseSO database, GridData floorData, GridData furnitureData, ObjectPlacer objectPlacer, SoundFeedback soundFeedback)
+    public RemovingState(Grid grid, PreviewSystem previewSystem, ObjectsDatabaseSO database, GridData floorData, GridData furnitureData, ObjectPlacer objectPlacer, ResourceManagement resourceManagement, SoundFeedback soundFeedback)
     {
         this.grid = grid;
         this.previewSystem = previewSystem;
@@ -35,6 +37,7 @@ public class RemovingState : IBuildingState
         this.floorData = floorData;
         this.furnitureData = furnitureData;
         this.objectPlacer = objectPlacer;
+        this.resourceManagement = resourceManagement;
         this.soundFeedback = soundFeedback;
     }
 
@@ -80,7 +83,7 @@ public class RemovingState : IBuildingState
         previewSystem.UpdatePosition(grid.CellToWorld(gridPosition), validity);
     }
 
-    public void UpdateResources(ResourceManagement resourceManagement)
+    public void UpdateResources()
     {
         resourceManagement.AddResource(ResourceType.Money, database.objectsData[gameObjectID].Prize);
         resourceManagement.RemoveResource(ResourceType.Energy, database.objectsData[gameObjectID].EnergyProduction);
