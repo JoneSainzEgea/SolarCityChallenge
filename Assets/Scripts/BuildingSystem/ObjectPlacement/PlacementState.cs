@@ -69,7 +69,10 @@ public class PlacementState : IBuildingState
             return false;
         }
         soundFeedback.PlaySound(SoundType.Place);
-        int index = objectPlacer.PlaceObject(database.objectsData[selectedObjectIndex].Prefab, grid.CellToWorld(gridPosition));
+        int index = objectPlacer.PlaceObject(database.objectsData[selectedObjectIndex].Prefab,
+                                             grid.CellToWorld(gridPosition),
+                                             database.objectsData[selectedObjectIndex].EnergyProduction,
+                                             resourceManagement);
         
         // TODO: cambiar la siguiente línea, ahora mismo el objeto 0 es el "suelo", implementar nuevo sistema
         GridData selectedData = database.objectsData[selectedObjectIndex].ID == 0 ? floorData : furnitureData;
@@ -91,7 +94,6 @@ public class PlacementState : IBuildingState
     public void UpdateResources()
     {
         resourceManagement.RemoveResource(ResourceType.Money, database.objectsData[selectedObjectIndex].Prize);
-        resourceManagement.AddResource(ResourceType.Energy, database.objectsData[selectedObjectIndex].EnergyProduction);
     }
 
     public void EndState()

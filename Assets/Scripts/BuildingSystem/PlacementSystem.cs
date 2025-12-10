@@ -9,6 +9,8 @@
  * Inspirado en el código de: Sunny Valley Studio, Grid Placement System
  * v1 -03/12/2025- construcción y demolición utilizando distintos tipos de objetos
  * v2 -09/12/2025- añadido de conexión con ResourceManagement e implementación de UpdateResources
+ * 
+ * TODO: implementar estado de mover
  */
 
 using UnityEngine;
