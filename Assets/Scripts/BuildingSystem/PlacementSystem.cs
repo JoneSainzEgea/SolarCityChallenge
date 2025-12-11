@@ -9,6 +9,7 @@
  * Inspirado en el código de: Sunny Valley Studio, Grid Placement System
  * v1 -03/12/2025- construcción y demolición utilizando distintos tipos de objetos
  * v2 -09/12/2025- añadido de conexión con ResourceManagement e implementación de UpdateResources
+ * v3 -11/12/2025- inclusión del sistema de conexión de componentes
  * 
  * TODO: implementar estado de mover
  */
@@ -78,6 +79,18 @@ public class PlacementSystem : MonoBehaviour
         gridVisualization.SetActive(true);
 
         buildingState = new RemovingState(grid, preview, database, floorData, furnitureData, objectPlacer, resourceManagement, soundFeedback);
+        buildingState.EnterState();
+
+        inputManager.OnMousePressed += PlaceStructure;
+        inputManager.OnCancel += StopPlacement;
+    }
+
+    public void StartConnecting()
+    {
+        StopPlacement();
+        gridVisualization.SetActive(true);
+
+        buildingState = new ConnectingState(grid, preview, database, floorData, furnitureData, objectPlacer, resourceManagement, soundFeedback);
         buildingState.EnterState();
 
         inputManager.OnMousePressed += PlaceStructure;

@@ -108,10 +108,17 @@ public class PreviewSystem : MonoBehaviour
         previewObject.transform.position = new Vector3(position.x, position.y + previewOffset, position.z);
     }
 
-    internal void StartShowingRemovePreview()
+    public void StartShowingRemovePreview()
     {
         cellIndicator.SetActive(true);
         PrepareCursor(Vector2Int.one);
         ApplyFeedbackToCursor(false);
+    }
+
+    // TODO: connection preview
+    public void StartShowingConnectionPreview()
+    {
+        cellIndicator.SetActive(true);
+        PrepareCursor(Vector2Int.one);
     }
 }
