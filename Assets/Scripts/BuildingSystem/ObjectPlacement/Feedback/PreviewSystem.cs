@@ -14,6 +14,7 @@
  * TODO: implementar previsualización cuando se va a eliminar un objeto.
  */
 
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PreviewSystem : MonoBehaviour
@@ -27,6 +28,9 @@ public class PreviewSystem : MonoBehaviour
     private Material previewMaterialInstance;
 
     private Renderer cellIndicatorRenderer;
+
+    // Connection
+    private readonly List<Connector> connectors = new();
 
     private void Start()
     {
@@ -114,11 +118,33 @@ public class PreviewSystem : MonoBehaviour
         PrepareCursor(Vector2Int.one);
         ApplyFeedbackToCursor(false);
     }
-
-    // TODO: connection preview
+    
+    #region Connection preview
+    public void PrepareConnectingCursor()
+    {
+        //cellIndicator.SetActive(true);
+        // TODO: icono de conexiones
+    }
     public void StartShowingConnectionPreview()
     {
         cellIndicator.SetActive(true);
-        PrepareCursor(Vector2Int.one);
+
+        foreach (var c in connectors)
+            c.Show();
     }
+    public Connector CreateConnector(Vector3 pos1)
+    {
+        var connector = new Connector(pos1);
+        connectors.Add(connector);
+        return connector;
+    }
+
+    public void StopShowingConnectionPreview()
+    {
+        foreach (var c in connectors)
+            c.Hide();
+
+        cellIndicator.SetActive(false);
+    }
+    #endregion
 }

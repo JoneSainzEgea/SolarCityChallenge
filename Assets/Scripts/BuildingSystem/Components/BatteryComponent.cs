@@ -12,6 +12,7 @@ public class BatteryComponent : BuildingComponent
 {
     // Necesita conexíón con: panel solar
     private bool connectedToSolarPanel = false;
+    private bool connectedToSystem = false;
     public override void OnPlacement(float energyProduction, ResourceManagement resManager)
     {
         base.OnPlacement(energyProduction, resManager);
@@ -26,7 +27,8 @@ public class BatteryComponent : BuildingComponent
         {
             connectedToSolarPanel = true;
         }
-        if(connectedToSolarPanel)
+        connectedToSystem = true;
+        if(connectedToSolarPanel && connectedToSystem)
             return true;
         return false;
     }

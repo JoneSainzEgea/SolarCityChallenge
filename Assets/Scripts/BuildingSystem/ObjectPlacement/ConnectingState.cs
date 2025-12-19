@@ -24,6 +24,7 @@ public class ConnectingState : IBuildingState
     ObjectPlacer objectPlacer;
     ResourceManagement resourceManagement;
     SoundFeedback soundFeedback;
+    Connector connector;
 
     public ConnectingState(Grid grid, PreviewSystem previewSystem, ObjectsDatabaseSO database, GridData floorData, GridData furnitureData, ObjectPlacer objectPlacer, ResourceManagement resourceManagement, SoundFeedback soundFeedback)
     {
@@ -39,6 +40,7 @@ public class ConnectingState : IBuildingState
 
     public void EnterState()
     {
+        previewSystem.PrepareConnectingCursor();
         previewSystem.StartShowingConnectionPreview();
     }
 
@@ -61,24 +63,40 @@ public class ConnectingState : IBuildingState
         }
         else
         {
+            Vector3 cellPosition = grid.CellToWorld(gridPosition);
+
             gameObjectIndex = selectedData.GetRepresentationIndex(gridPosition);
             gameObjectID = selectedData.GetRepresentationID(gridPosition);
             if (gameObjectIndex == -1 || gameObjectID == -1)
                 return false;
+
             soundFeedback.PlaySound(SoundType.Place);
+
             if (!objectPlacer.isConnecting)
+            {
+                connector = previewSystem.CreateConnector(cellPosition);
                 objectPlacer.StartConnectingAt(gameObjectIndex);
+            }
             else
+            {
                 objectPlacer.StopConnectingAt(gameObjectIndex);
+            }
+            if (connector != null)
+                connector.Update(cellPosition);
         }
-        Vector3 cellPosition = grid.CellToWorld(gridPosition);
-        //previewSystem.UpdatePosition(cellPosition, CheckIfSelectionIsValid(gridPosition));
+
         return true;
     }
 
     public void UpdateState(Vector3Int gridPosition)
     {
-        // TODO: visualización
+        if (!objectPlacer.isConnecting)
+            return;
+
+        Vector3 cellPosition = grid.CellToWorld(gridPosition);
+
+        if (connector != null)
+            connector.Update(cellPosition);
     }
 
     public void UpdateResources()
@@ -88,6 +106,6 @@ public class ConnectingState : IBuildingState
 
     public void EndState()
     {
-        previewSystem.StopShowingPreview();
+        previewSystem.StopShowingConnectionPreview();
     }
 }
