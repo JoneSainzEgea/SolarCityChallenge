@@ -1,5 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
+/* Connector
+ * Jone Sainz Egea
+ * 19/12/2025
+ * 
+ * Clase que se encarga de la visualización de la conexión entre elementos.
+ * 
+ * v1 -19/12/2025- crea un nuevo objeto con un line renderer cada vez que se llama al constructor.
+ * 
+ * TODO: cambiar el método de visualización para no crear tantos game objects.
+ */
 using UnityEngine;
 
 public class Connector

@@ -17,6 +17,10 @@ using UnityEngine;
 
 public class PlacementState : IBuildingState
 {
+    private BuildBehaviourSO behaviour;
+    private ResourceManagement resourceManagement;
+    private SoundFeedback soundFeedback;
+    
     private int selectedObjectIndex = -1;
     int ID;
     Grid grid;
@@ -25,8 +29,6 @@ public class PlacementState : IBuildingState
     GridData floorData;
     GridData furnitureData;
     ObjectPlacer objectPlacer;
-    ResourceManagement resourceManagement;
-    SoundFeedback soundFeedback;
 
     public PlacementState(int iD, Grid grid, PreviewSystem previewSystem, ObjectsDatabaseSO database, GridData floorData, GridData furnitureData, ObjectPlacer objectPlacer, ResourceManagement resourceManagement, SoundFeedback soundFeedback)
     {
