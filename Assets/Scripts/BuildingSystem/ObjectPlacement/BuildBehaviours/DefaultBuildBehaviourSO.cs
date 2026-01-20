@@ -17,8 +17,10 @@ public class DefaultBuildBehaviourSO : BuildBehaviourSO
     private Grid grid;
     private GridDataManager gridData;
     private ResourceManagement resourceManagement;
+    PreviewSystem preview;
     public override void StartPreview(PreviewSystem preview, GameObject prefab, Vector2Int size)
     {
+        this.preview = preview;
         this.prefab = prefab;
         this.size = size;
         preview.StartShowingPlacementPreview(prefab, size);
@@ -48,5 +50,10 @@ public class DefaultBuildBehaviourSO : BuildBehaviourSO
 
         GridData furnitureData = gridData.GetGridData(GridDataType.FurnitureData);
         furnitureData.AddObjectAt(pos,size, ID, index);
+    }
+
+    public override void UpdatePreview(Vector3Int gridPosition)
+    {
+        preview.UpdatePosition(grid.CellToWorld(gridPosition), CanPlace(gridPosition, grid, gridData));
     }
 }

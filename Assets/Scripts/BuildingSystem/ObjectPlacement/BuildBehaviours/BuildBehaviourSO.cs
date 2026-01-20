@@ -18,4 +18,6 @@ public abstract class BuildBehaviourSO : ScriptableObject
     public abstract bool HasMoney(ResourceManagement resourceManagement, int prize);
 
     public abstract void Place(ObjectPlacer placer, int ID, int energyProduction);
+
+    public abstract void UpdatePreview(Vector3Int gridPosition);
 }

@@ -29,6 +29,8 @@ public class PreviewSystem : MonoBehaviour
 
     private Renderer cellIndicatorRenderer;
 
+    private Vector3Int rectangleInitialPos;
+
     // Connection
     private readonly List<Connector> connectors = new();
 
@@ -44,6 +46,15 @@ public class PreviewSystem : MonoBehaviour
         previewObject = Instantiate(prefab);
         PreparePreview(previewObject);
         PrepareCursor(size);
+        cellIndicator.SetActive(true);
+    }
+
+    public void StartShowingFloorPlacementPreview(GameObject prefab, Vector3Int initialPos)
+    {
+        rectangleInitialPos = initialPos;
+        previewObject = Instantiate(prefab);
+        PreparePreview(previewObject);
+        PrepareCursor(Vector2Int.one);
         cellIndicator.SetActive(true);
     }
 
@@ -87,6 +98,14 @@ public class PreviewSystem : MonoBehaviour
         }
         MoveCursor(position);
         ApplyFeedbackToCursor(validity);
+    }
+
+    public void UpdateFloorPosition(List<Vector3> gridRectangle, List<bool> validity)
+    {
+        foreach (Vector3 gridPosition in gridRectangle)
+        {
+            //TODO: Continue
+        }
     }
 
     private void ApplyFeedbackToPreview(bool validity)

@@ -10,6 +10,7 @@
  * Inspirado en el código de: Sunny Valley Studio, Grid Placement System
  * v1 -03/12/2025- comprueba que no se puede colocar un objeto en esa posición, elimina el objeto que hay en esa posición y lo elimina del almacenamiento del GridData.
  * v2 -09/12/2025- actualiza valores de dinero y energía.
+ * v3 -20/01/2026- introducción de GridDataManager
  * 
  * TODO: añadir previsualización que muestra el objeto de la escena en rojo si se va a eliminar
  */

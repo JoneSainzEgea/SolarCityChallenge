@@ -7,6 +7,7 @@
  * Actualiza el estado de los componentes.
  * 
  * v1 -11/12/2025- 
+ * v2 -20/01/2026- introducción de GridDataManager
  * 
  * TODO: añadir previsualización de la conexión.
  */
