@@ -10,9 +10,9 @@
  * Inspirado en el código de: Sunny Valley Studio, Grid Placement System
  * v1 -03/12/2025- Identifica el objeto, lo previsualiza, comprueba que se pueda colocar, llama a colocarlo y almacena la información de su posición, tipo de objeto y tamaño.
  * v2 -09/12/2025- Comprueba que haya dinero suficiente, actualiza valores de dinero y energía.
+ * v3 -20/01/2025- Cambio de funcionamiento implementando BuildBehaviourSO
  */
 
-using System;
 using UnityEngine;
 
 public class PlacementState : IBuildingState
@@ -26,18 +26,16 @@ public class PlacementState : IBuildingState
     Grid grid;
     PreviewSystem previewSystem;
     ObjectsDatabaseSO database;
-    GridData floorData;
-    GridData furnitureData;
+    GridDataManager gridData;
     ObjectPlacer objectPlacer;
 
-    public PlacementState(int iD, Grid grid, PreviewSystem previewSystem, ObjectsDatabaseSO database, GridData floorData, GridData furnitureData, ObjectPlacer objectPlacer, ResourceManagement resourceManagement, SoundFeedback soundFeedback)
+    public PlacementState(int iD, Grid grid, PreviewSystem previewSystem, ObjectsDatabaseSO database, GridDataManager gridData, ObjectPlacer objectPlacer, ResourceManagement resourceManagement, SoundFeedback soundFeedback)
     {
         ID = iD;
         this.grid = grid;
         this.previewSystem = previewSystem;
         this.database = database;
-        this.floorData = floorData;
-        this.furnitureData = furnitureData;
+        this.gridData = gridData;
         this.objectPlacer = objectPlacer;
         this.resourceManagement = resourceManagement;
         this.soundFeedback = soundFeedback;
@@ -48,9 +46,8 @@ public class PlacementState : IBuildingState
         selectedObjectIndex = database.objectsData.FindIndex(data => data.ID == ID);
         if (selectedObjectIndex > -1)
         {
-            previewSystem.StartShowingPlacementPreview(
-                database.objectsData[selectedObjectIndex].Prefab,
-                database.objectsData[selectedObjectIndex].Size);
+            behaviour = database.objectsData[selectedObjectIndex].BuildBehaviour;
+            behaviour.StartPreview(previewSystem, database.objectsData[selectedObjectIndex].Prefab, database.objectsData[selectedObjectIndex].Size);
         }
         else
             throw new System.Exception($"No object with ID {ID}");
@@ -58,30 +55,19 @@ public class PlacementState : IBuildingState
 
     public bool OnAction(Vector3Int gridPosition)
     {
-        bool placementValidity = CheckPlacementValidity(gridPosition, selectedObjectIndex);
-        if (placementValidity == false)
+        if (!behaviour.HasMoney(resourceManagement, database.objectsData[selectedObjectIndex].Prize))
         {
+            // TODO: change sound feedback and animation for money validity
             soundFeedback.PlaySound(SoundType.WrongPlacement);
             return false;
         }
-        bool moneyValidity = CheckMoneyValidity();
-        if (moneyValidity == false)
+        if (!behaviour.CanPlace(gridPosition, grid, gridData))
         {
             soundFeedback.PlaySound(SoundType.WrongPlacement);
             return false;
         }
         soundFeedback.PlaySound(SoundType.Place);
-        int index = objectPlacer.PlaceObject(database.objectsData[selectedObjectIndex].Prefab,
-                                             grid.CellToWorld(gridPosition),
-                                             database.objectsData[selectedObjectIndex].EnergyProduction,
-                                             resourceManagement);
-        
-        // TODO: cambiar la siguiente línea, ahora mismo el objeto 0 es el "suelo", implementar nuevo sistema
-        GridData selectedData = database.objectsData[selectedObjectIndex].ID == 0 ? floorData : furnitureData;
-        selectedData.AddObjectAt(gridPosition,
-            database.objectsData[selectedObjectIndex].Size,
-            database.objectsData[selectedObjectIndex].ID,
-            index);
+        behaviour.Place(objectPlacer, ID, database.objectsData[selectedObjectIndex].EnergyProduction);
 
         previewSystem.UpdatePosition(grid.CellToWorld(gridPosition), false);
         return true;
@@ -89,7 +75,7 @@ public class PlacementState : IBuildingState
 
     public void UpdateState(Vector3Int gridPosition)
     {
-        bool placementValidity = CheckPlacementValidity(gridPosition, selectedObjectIndex);
+        bool placementValidity = behaviour.CanPlace(gridPosition, grid, gridData);
 
         previewSystem.UpdatePosition(grid.CellToWorld(gridPosition), placementValidity);
     }
@@ -101,19 +87,5 @@ public class PlacementState : IBuildingState
     public void EndState()
     {
         previewSystem.StopShowingPreview();
-    }
-
-    private bool CheckPlacementValidity(Vector3Int gridPosition, int selectedObjectIndex)
-    {
-        // TODO: cambiar esto por los objetos que sean de tipo suelo y los que se puedan poner encima
-        GridData selectedData = database.objectsData[selectedObjectIndex].ID == 0 ? floorData : furnitureData;
-        return selectedData.CanPlaceObjectAt(gridPosition, database.objectsData[selectedObjectIndex].Size);
-    }
-
-    private bool CheckMoneyValidity()
-    {
-        if (resourceManagement.GetResourceAmount(ResourceType.Money) < database.objectsData[selectedObjectIndex].Prize)
-            return false;
-        return true;
     }
 }

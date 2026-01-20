@@ -18,3 +18,4 @@ MonoBehaviour:
   <EnergyProduction>k__BackingField: 0
   <Size>k__BackingField: {x: 1, y: 1}
   <Prefab>k__BackingField: {fileID: 6878538599528186925, guid: 085cca77d97f46d479a3fe82dde9c844, type: 3}
+  <BuildBehaviour>k__BackingField: {fileID: 11400000, guid: 548306829c1bb2f40a3ee897a6d378f8, type: 2}

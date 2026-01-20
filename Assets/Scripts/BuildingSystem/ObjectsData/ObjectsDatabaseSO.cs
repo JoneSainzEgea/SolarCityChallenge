@@ -11,7 +11,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "BuildingSystem/ObjectDatabase")]
+[CreateAssetMenu(menuName = "Building/ObjectDatabase")]
 public class ObjectsDatabaseSO : ScriptableObject
 {
     public List<ObjectDataSO> objectsData;

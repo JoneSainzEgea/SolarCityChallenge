@@ -25,7 +25,7 @@ public class PlacementSystem : MonoBehaviour
 
     [SerializeField] private GameObject gridVisualization;
 
-    private GridData floorData, furnitureData;
+    private GridDataManager gridDataManager;    
 
     [SerializeField] private PreviewSystem preview;
 
@@ -42,8 +42,9 @@ public class PlacementSystem : MonoBehaviour
     private void Start()
     {
         StopPlacement();
-        floorData = new();
-        furnitureData = new();
+
+        gridDataManager = new();
+        gridDataManager.InitializeGridData();
     }
 
     private void Update()
@@ -66,7 +67,7 @@ public class PlacementSystem : MonoBehaviour
         StopPlacement();
         gridVisualization.SetActive(true);
 
-        buildingState = new PlacementState(ID, grid, preview, database, floorData, furnitureData, objectPlacer, resourceManagement, soundFeedback);
+        buildingState = new PlacementState(ID, grid, preview, database, gridDataManager, objectPlacer, resourceManagement, soundFeedback);
         buildingState.EnterState();
 
         inputManager.OnMousePressed += PlaceStructure;
@@ -78,7 +79,7 @@ public class PlacementSystem : MonoBehaviour
         StopPlacement();
         gridVisualization.SetActive(true);
 
-        buildingState = new RemovingState(grid, preview, database, floorData, furnitureData, objectPlacer, resourceManagement, soundFeedback);
+        buildingState = new RemovingState(grid, preview, database, gridDataManager, objectPlacer, resourceManagement, soundFeedback);
         buildingState.EnterState();
 
         inputManager.OnMousePressed += PlaceStructure;
@@ -90,7 +91,7 @@ public class PlacementSystem : MonoBehaviour
         StopPlacement();
         gridVisualization.SetActive(true);
 
-        buildingState = new ConnectingState(grid, preview, database, floorData, furnitureData, objectPlacer, resourceManagement, soundFeedback);
+        buildingState = new ConnectingState(grid, preview, database, gridDataManager, objectPlacer, resourceManagement, soundFeedback);
         buildingState.EnterState();
 
         inputManager.OnMousePressed += PlaceStructure;

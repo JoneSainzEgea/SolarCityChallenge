@@ -19,20 +19,18 @@ public class ConnectingState : IBuildingState
     Grid grid;
     PreviewSystem previewSystem;
     ObjectsDatabaseSO database;
-    GridData floorData;
-    GridData furnitureData;
+    GridDataManager gridData;
     ObjectPlacer objectPlacer;
     ResourceManagement resourceManagement;
     SoundFeedback soundFeedback;
     Connector connector;
 
-    public ConnectingState(Grid grid, PreviewSystem previewSystem, ObjectsDatabaseSO database, GridData floorData, GridData furnitureData, ObjectPlacer objectPlacer, ResourceManagement resourceManagement, SoundFeedback soundFeedback)
+    public ConnectingState(Grid grid, PreviewSystem previewSystem, ObjectsDatabaseSO database, GridDataManager gridData, ObjectPlacer objectPlacer, ResourceManagement resourceManagement, SoundFeedback soundFeedback)
     {
         this.grid = grid;
         this.previewSystem = previewSystem;
+        this.gridData = gridData;
         this.database = database;
-        this.floorData = floorData;
-        this.furnitureData = furnitureData;
         this.objectPlacer = objectPlacer;
         this.resourceManagement = resourceManagement;
         this.soundFeedback = soundFeedback;
@@ -46,15 +44,7 @@ public class ConnectingState : IBuildingState
 
     public bool OnAction(Vector3Int gridPosition)
     {
-        GridData selectedData = null;
-        if (furnitureData.CanPlaceObjectAt(gridPosition, Vector2Int.one) == false)
-        {
-            selectedData = furnitureData;
-        }
-        else if (floorData.CanPlaceObjectAt(gridPosition, Vector2Int.one) == false)
-        {
-            selectedData = floorData;
-        }
+        GridData selectedData = gridData.GetGridDataType(gridPosition, Vector2Int.one);
 
         if (selectedData == null)
         {

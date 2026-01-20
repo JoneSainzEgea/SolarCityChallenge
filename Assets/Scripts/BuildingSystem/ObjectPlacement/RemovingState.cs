@@ -23,19 +23,17 @@ public class RemovingState : IBuildingState
     Grid grid;
     PreviewSystem previewSystem;
     ObjectsDatabaseSO database;
-    GridData floorData;
-    GridData furnitureData;
+    GridDataManager gridData;
     ObjectPlacer objectPlacer;
     ResourceManagement resourceManagement;
     SoundFeedback soundFeedback;
 
-    public RemovingState(Grid grid, PreviewSystem previewSystem, ObjectsDatabaseSO database, GridData floorData, GridData furnitureData, ObjectPlacer objectPlacer, ResourceManagement resourceManagement, SoundFeedback soundFeedback)
+    public RemovingState(Grid grid, PreviewSystem previewSystem, ObjectsDatabaseSO database, GridDataManager gridData, ObjectPlacer objectPlacer, ResourceManagement resourceManagement, SoundFeedback soundFeedback)
     {
         this.grid = grid;
         this.previewSystem = previewSystem;
         this.database = database;
-        this.floorData = floorData;
-        this.furnitureData = furnitureData;
+        this.gridData = gridData;
         this.objectPlacer = objectPlacer;
         this.resourceManagement = resourceManagement;
         this.soundFeedback = soundFeedback;
@@ -48,15 +46,7 @@ public class RemovingState : IBuildingState
 
     public bool OnAction(Vector3Int gridPosition)
     {
-        GridData selectedData = null;
-        if(furnitureData.CanPlaceObjectAt(gridPosition, Vector2Int.one) == false)
-        {
-            selectedData = furnitureData;
-        }
-        else if(floorData.CanPlaceObjectAt(gridPosition, Vector2Int.one) == false)
-        {
-            selectedData = floorData;
-        }
+        GridData selectedData = gridData.GetGridDataType(gridPosition, Vector2Int.one);
 
         if(selectedData == null)
         {
@@ -93,10 +83,9 @@ public class RemovingState : IBuildingState
     {
         previewSystem.StopShowingPreview();
     }
-
-    // Cuando no se puede colocar un objeto en esa posición devuelve true, hay un objeto que se puede eliminar en esa casilla
+    
     private bool CheckIfSelectionIsValid(Vector3Int gridPosition)
     {
-        return !(furnitureData.CanPlaceObjectAt(gridPosition, Vector2Int.one) && floorData.CanPlaceObjectAt(gridPosition, Vector2Int.one));
+        return gridData.IsOccupied(gridPosition, Vector2Int.one);
     }
 }
