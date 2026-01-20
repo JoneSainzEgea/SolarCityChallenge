@@ -7,15 +7,17 @@
  * 
  * Inspirado en el código de: Sunny Valley Studio, Grid Placement System
  * v1 -03/12/2025- ID, nombre, tamaño 2D y prefab del objeto.
+ * v2 -09/12/2025- Precio y producción de energía.
+ * V3 -19/01/2026- BuildBehaviourSO.
  * 
- * TODO: ampliar a dimensión vertical.
+ * TODO: ampliar a dimensión vertical, posibilidad de que se venda a otro precio
  */
 
 using System;
 using UnityEngine;
 
 
-[CreateAssetMenu(menuName = "BuildingSystem/Object")]
+[CreateAssetMenu(menuName = "Building/New Object")]
 [Serializable]
 public class ObjectDataSO : ScriptableObject
 {
@@ -26,8 +28,18 @@ public class ObjectDataSO : ScriptableObject
     public int ID { get; private set; }
 
     [field: SerializeField]
+    public int Prize { get; private set; }
+
+    // TODO: posibilidad de que se venda a otro precio
+
+    [field: SerializeField]
+    public int EnergyProduction { get; private set; }
+
+    [field: SerializeField]
     public Vector2Int Size { get; private set; } = Vector2Int.one;
 
     [field: SerializeField]
     public GameObject Prefab { get; private set; }
+
+    [field: SerializeField] public BuildBehaviourSO BuildBehaviour { get; private set; }
 }

@@ -4,10 +4,14 @@
  * 
  * La clase PlacementSystem se encarga de la comunicación de todo lo que tiene que ver con el sistema de construcción.
  * Recibe toda la información necesaria para ello: input, grid y su visualización, objetos, tipos de objetos y su previsualización, sonidos.
- * Desde este script se gestiona el comienzo y fin de la construcción y demolición.
+ * Desde este script se gestiona el comienzo y fin de la construcción y demolición, y los efectos sobre los recursos.
  * 
  * Inspirado en el código de: Sunny Valley Studio, Grid Placement System
  * v1 -03/12/2025- construcción y demolición utilizando distintos tipos de objetos
+ * v2 -09/12/2025- añadido de conexión con ResourceManagement e implementación de UpdateResources
+ * v3 -11/12/2025- inclusión del sistema de conexión de componentes
+ * 
+ * TODO: implementar estado de mover
  */
 
 using UnityEngine;
@@ -21,9 +25,11 @@ public class PlacementSystem : MonoBehaviour
 
     [SerializeField] private GameObject gridVisualization;
 
-    private GridData floorData, furnitureData;
+    private GridDataManager gridDataManager;    
 
     [SerializeField] private PreviewSystem preview;
+
+    [SerializeField] private ResourceManagement resourceManagement;
 
     private Vector3Int lastDetectedPosition = Vector3Int.zero;
 
@@ -36,8 +42,9 @@ public class PlacementSystem : MonoBehaviour
     private void Start()
     {
         StopPlacement();
-        floorData = new();
-        furnitureData = new();
+
+        gridDataManager = new();
+        gridDataManager.InitializeGridData();
     }
 
     private void Update()
@@ -60,7 +67,7 @@ public class PlacementSystem : MonoBehaviour
         StopPlacement();
         gridVisualization.SetActive(true);
 
-        buildingState = new PlacementState(ID, grid, preview, database, floorData, furnitureData, objectPlacer, soundFeedback);
+        buildingState = new PlacementState(ID, grid, preview, database, gridDataManager, objectPlacer, resourceManagement, soundFeedback);
         buildingState.EnterState();
 
         inputManager.OnMousePressed += PlaceStructure;
@@ -72,7 +79,19 @@ public class PlacementSystem : MonoBehaviour
         StopPlacement();
         gridVisualization.SetActive(true);
 
-        buildingState = new RemovingState(grid, preview, floorData, furnitureData, objectPlacer, soundFeedback);
+        buildingState = new RemovingState(grid, preview, database, gridDataManager, objectPlacer, resourceManagement, soundFeedback);
+        buildingState.EnterState();
+
+        inputManager.OnMousePressed += PlaceStructure;
+        inputManager.OnCancel += StopPlacement;
+    }
+
+    public void StartConnecting()
+    {
+        StopPlacement();
+        gridVisualization.SetActive(true);
+
+        buildingState = new ConnectingState(grid, preview, database, gridDataManager, objectPlacer, resourceManagement, soundFeedback);
         buildingState.EnterState();
 
         inputManager.OnMousePressed += PlaceStructure;
@@ -88,7 +107,8 @@ public class PlacementSystem : MonoBehaviour
         Vector3 mousePos = inputManager.GetSelectedMapPosition();
         Vector3Int gridPosition = grid.WorldToCell(mousePos);
 
-        buildingState.OnAction(gridPosition);
+        if (buildingState.OnAction(gridPosition))
+            buildingState.UpdateResources();
     }
 
     private void StopPlacement()

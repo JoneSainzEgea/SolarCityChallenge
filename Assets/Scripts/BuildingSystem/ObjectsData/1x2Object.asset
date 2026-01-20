@@ -9,10 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 9ec2817b4dd356c478c5ee18d2a15526, type: 3}
   m_Name: 1x2Object
   m_EditorClassIdentifier: Assembly-CSharp::ObjectData
-  <Name>k__BackingField: 1x2
-  <ID>k__BackingField: 1
+  <Name>k__BackingField: Placa1x2
+  <ID>k__BackingField: 5
+  <Prize>k__BackingField: 100
+  <EnergyProduction>k__BackingField: 50
   <Size>k__BackingField: {x: 1, y: 2}
-  <Prefab>k__BackingField: {fileID: 4553453013749246068, guid: 0a2305ebb583864469141c133600ec92, type: 3}
+  <Prefab>k__BackingField: {fileID: 6959627862702185019, guid: 12ab6a54daa6692499db0dffc48fb666, type: 3}
+  <BuildBehaviour>k__BackingField: {fileID: 11400000, guid: de1908b9c6372ce4c920ff59a96f9f2b, type: 2}
