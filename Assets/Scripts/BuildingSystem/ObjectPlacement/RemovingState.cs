@@ -21,6 +21,7 @@ public class RemovingState : IBuildingState
 {
     private int gameObjectIndex = -1;
     private int gameObjectID = -1;
+    private IRemoveBehaviour behaviour;
     Grid grid;
     PreviewSystem previewSystem;
     ObjectsDatabaseSO database;
@@ -56,18 +57,30 @@ public class RemovingState : IBuildingState
         }
         else if (gridData.GetGridDataType(gridPosition, Vector2Int.one) == GridDataType.FloorData)
         {
-
+            // TODO: change for floor remove
+            behaviour = new DefaultRemoveBehaviour();
+            behaviour.Initialize(previewSystem, grid, gridData);
         }
         else
         {
-            gameObjectIndex = selectedData.GetRepresentationIndex(gridPosition);
-            gameObjectID = selectedData.GetRepresentationID(gridPosition);
-            if (gameObjectIndex == -1 || gameObjectID == -1)
-                return false;
-            soundFeedback.PlaySound(SoundType.Remove);
-            selectedData.RemoveObjectAt(gridPosition);
-            objectPlacer.RemoveObjectAt(gameObjectIndex);
+            behaviour = new DefaultRemoveBehaviour();
+            behaviour.Initialize(previewSystem, grid, gridData);
         }
+
+        if (!behaviour.CanRemove(gridPosition))
+        {
+            soundFeedback.PlaySound(SoundType.WrongPlacement);
+            return false;
+        }
+
+        gameObjectIndex = selectedData.GetRepresentationIndex(gridPosition);
+        gameObjectID = selectedData.GetRepresentationID(gridPosition);
+        if (gameObjectIndex == -1 || gameObjectID == -1)
+            return false;
+
+        soundFeedback.PlaySound(SoundType.Remove);
+        behaviour.Remove(objectPlacer, gameObjectIndex);
+
         Vector3 cellPosition = grid.CellToWorld(gridPosition);
         previewSystem.UpdatePosition(cellPosition, CheckIfSelectionIsValid(gridPosition));
         return true;
