@@ -8,6 +8,7 @@
  * v1 -03/12/2025- creación y eliminación de objetos.
  * v2 -10/12/2025- llama a OnPlacement del componente.
  * v3 -11/12/2025- conecta componentes.
+ * v4 -21/01/2026- crea y elimina grupos de objetos.
  * 
  * TODO: que sean hijos de un objeto concreto para limpieza de jerarquía
  */
@@ -18,6 +19,7 @@ using UnityEngine;
 public class ObjectPlacer : MonoBehaviour
 {
     private List<GameObject> placedGameObjects = new();
+    private List<List<GameObject>> groupedGameObjects = new();
     public bool isConnecting = false;
     private BuildingComponent component1, component2;
 
@@ -38,12 +40,31 @@ public class ObjectPlacer : MonoBehaviour
         return placedGameObjects.Count - 1;
     }
 
-    internal void RemoveObjectAt(int gameObjectIndex)
+    public int PlaceGroupObject(GameObject prefab, Vector3 position)
+    {
+        // TODO: que sean hijos de un objeto concreto para limpieza de jerarquía
+        GameObject newObject = Instantiate(prefab);
+        newObject.transform.position = position;
+
+        //groupedGameObjects[0].Add(newObject);
+
+        return groupedGameObjects.Count - 1;
+    }
+
+    public void RemoveObjectAt(int gameObjectIndex)
     {
         if (placedGameObjects.Count <= gameObjectIndex || placedGameObjects[gameObjectIndex] == null)
             return;
         Destroy(placedGameObjects[gameObjectIndex]);
         placedGameObjects[gameObjectIndex] = null;
+    }
+
+    public void RemoveGroupObjectAt(int groupObjectIndex)
+    {
+        if (groupedGameObjects.Count <= groupObjectIndex || groupedGameObjects[groupObjectIndex] == null)
+            return;
+        //Destroy(groupedGameObjects[groupObjectIndex]);
+        groupedGameObjects[groupObjectIndex] = null;
     }
 
     public void StartConnectingAt(int gameObjectIndex)

@@ -57,14 +57,13 @@ public class RemovingState : IBuildingState
         }
         else if (gridData.GetGridDataType(gridPosition, Vector2Int.one) == GridDataType.FloorData)
         {
-            // TODO: change for floor remove
-            behaviour = new DefaultRemoveBehaviour();
-            behaviour.Initialize(previewSystem, grid, gridData);
+            behaviour = new FloorRemoveBehaviour();
+            behaviour.Initialize(previewSystem, grid, selectedData, gridData);
         }
         else
         {
             behaviour = new DefaultRemoveBehaviour();
-            behaviour.Initialize(previewSystem, grid, gridData);
+            behaviour.Initialize(previewSystem, grid, selectedData, gridData);
         }
 
         if (!behaviour.CanRemove(gridPosition))

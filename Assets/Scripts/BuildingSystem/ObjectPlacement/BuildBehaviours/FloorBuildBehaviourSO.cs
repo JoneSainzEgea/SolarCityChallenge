@@ -81,9 +81,9 @@ public class FloorBuildBehaviourSO : BuildBehaviourSO
             preview.StopShowingFloorPreview();
             foreach (Vector3Int posRect in gridRectangle)
             {
-                int index = placer.PlaceObject(prefab, grid.CellToWorld(posRect), energyProduction, resourceManagement);
-
-                floorData.AddObjectAt(posRect, size, ID, index);
+                int groupIndex = placer.PlaceGroupObject(prefab, grid.CellToWorld(posRect));
+                floorData.AddObjectAt(posRect, size, ID, groupIndex);
+                floorData.AddObjectToGroup(posRect, groupIndex);
             }
 
             isFirstClick = true;

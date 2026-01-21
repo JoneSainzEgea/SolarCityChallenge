@@ -1,4 +1,4 @@
-/* DefaultRemoveBehaviour
+/* FloorRemoveBehaviour
  * Jone Sainz Egea
  * 21/01/2026
  *
@@ -8,14 +8,14 @@
  */
 using UnityEngine;
 
-public class DefaultRemoveBehaviour : IRemoveBehaviour
+public class FloorRemoveBehaviour : IRemoveBehaviour
 {
     PreviewSystem preview;
     Grid grid;
     GridDataManager gridData;
     GridData selectedData;
     Vector3Int pos;
-    
+
     public void Initialize(PreviewSystem preview, Grid grid, GridData selectedData, GridDataManager gridData)
     {
         this.preview = preview;
@@ -30,13 +30,18 @@ public class DefaultRemoveBehaviour : IRemoveBehaviour
     {
         this.pos = gridPosition;
 
+        // There's no objects on top of the floor (only furniture)
+
+
         return true;
     }
 
     public void Remove(ObjectPlacer placer, int index)
     {
         selectedData.RemoveObjectAt(pos);
-        placer.RemoveObjectAt(index);
+        placer.RemoveGroupObjectAt(index);
+
+        // Removes walls, and wall furniture
     }
 
     public void UpdatePreview(Vector3Int gridPosition)

@@ -10,7 +10,7 @@ using UnityEngine;
 
 public interface IRemoveBehaviour
 {
-    public abstract void Initialize(PreviewSystem preview, Grid grid, GridDataManager gridData);
+    public abstract void Initialize(PreviewSystem preview, Grid grid, GridData selectedData, GridDataManager gridData);
 
     public abstract bool CanRemove(Vector3Int gridPosition);
 

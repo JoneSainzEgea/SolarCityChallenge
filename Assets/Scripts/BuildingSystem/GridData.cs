@@ -11,6 +11,7 @@
  * 
  * Inspirado en el código de: Sunny Valley Studio, Grid Placement System
  * v1 -03/12/2025- almacenamiento de objetos en el grid según su posición, ID, tamaño e índice.
+ * v2 -21/01/2026- añadido de GridDataGroups para elementos conjuntos (suelo)
  */
 
 using System;
@@ -20,7 +21,7 @@ using UnityEngine;
 public class GridData
 {
     Dictionary<Vector3Int, PlacementData> placedObjects = new();
-
+    Dictionary<Vector3Int, int> dataGroups = new();
     public void AddObjectAt(Vector3Int gridPosition, Vector2Int objectSize, int ID, int placedObjectIndex)
     {
         List<Vector3Int> positionToOccupy = CalculatePositions(gridPosition, objectSize);
@@ -31,6 +32,11 @@ public class GridData
                 throw new Exception($"Dictionary already contains this cell position {pos}");
             placedObjects[pos] = data;
         }
+    }
+
+    public void AddObjectToGroup(Vector3Int gridPosition, int groupIndex)
+    {
+        dataGroups.Add(gridPosition, groupIndex);
     }
 
     private List<Vector3Int> CalculatePositions(Vector3Int gridPosition, Vector2Int objectSize)
@@ -73,11 +79,29 @@ public class GridData
         return placedObjects[gridPosition].ID;
     }
 
-    internal void RemoveObjectAt(Vector3Int gridPosition)
+    public void RemoveObjectAt(Vector3Int gridPosition)
     {
-        foreach(var pos in placedObjects[gridPosition].occupiedPositions)
+        List<Vector3Int> keysToRemove = new List<Vector3Int>();
+
+        foreach (var pos in placedObjects[gridPosition].occupiedPositions)
         {
-            placedObjects.Remove(pos);
+            if (dataGroups.ContainsKey(pos))
+            {
+                int groupIndex = dataGroups[pos];
+                foreach (KeyValuePair<Vector3Int, int> pair in dataGroups)
+                {
+                    if(pair.Value == groupIndex)
+                        keysToRemove.Add(pair.Key);
+                }
+            }
+            else
+                keysToRemove.Add(pos);
+        }
+
+        foreach (var key in keysToRemove)
+        {
+            dataGroups.Remove(key);
+            placedObjects.Remove(key);
         }
     }
 }
