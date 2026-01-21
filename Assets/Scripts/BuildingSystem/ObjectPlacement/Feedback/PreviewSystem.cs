@@ -9,6 +9,7 @@
  * 
  * Inspirado en el código de: Sunny Valley Studio, Grid Placement System
  * v1 -03/12/2025- previsualización del cursor y del objeto a colocar con retroalimentación de color.
+ * v2 -21/01/2026- previsualización especial del suelo.
  * 
  * TODO: arreglar que el cell indicator aumente de tamaño según el tamaño del objeto que se previsualiza.
  * TODO: implementar previsualización cuando se va a eliminar un objeto.
@@ -23,12 +24,15 @@ public class PreviewSystem : MonoBehaviour
 
     [SerializeField] private GameObject cellIndicator;
     private GameObject previewObject;
+    private List<GameObject> previewObjects = new List<GameObject>();
 
     [SerializeField] private Material previewMaterialsPrefab;
     private Material previewMaterialInstance;
 
     private Renderer cellIndicatorRenderer;
 
+    // Floor preview
+    private GameObject floorPrefab;
     private Vector3Int rectangleInitialPos;
 
     // Connection
@@ -41,20 +45,12 @@ public class PreviewSystem : MonoBehaviour
         cellIndicatorRenderer = cellIndicator.GetComponentInChildren<Renderer>();
     }
 
+    #region DefaultPreview
     public void StartShowingPlacementPreview(GameObject prefab, Vector2Int size)
     {
         previewObject = Instantiate(prefab);
         PreparePreview(previewObject);
         PrepareCursor(size);
-        cellIndicator.SetActive(true);
-    }
-
-    public void StartShowingFloorPlacementPreview(GameObject prefab, Vector3Int initialPos)
-    {
-        rectangleInitialPos = initialPos;
-        previewObject = Instantiate(prefab);
-        PreparePreview(previewObject);
-        PrepareCursor(Vector2Int.one);
         cellIndicator.SetActive(true);
     }
 
@@ -81,17 +77,9 @@ public class PreviewSystem : MonoBehaviour
             renderer.materials = materials;
         }
     }
-
-    public void StopShowingPreview()
-    {
-        cellIndicator.SetActive(false);
-        if (previewObject != null)
-            Destroy(previewObject);
-    }
-
     public void UpdatePosition(Vector3 position, bool validity)
     {
-        if(previewObject != null)
+        if (previewObject != null)
         {
             MovePreview(position);
             ApplyFeedbackToPreview(validity);
@@ -100,12 +88,11 @@ public class PreviewSystem : MonoBehaviour
         ApplyFeedbackToCursor(validity);
     }
 
-    public void UpdateFloorPosition(List<Vector3> gridRectangle, List<bool> validity)
+    public void StopShowingPreview()
     {
-        foreach (Vector3 gridPosition in gridRectangle)
-        {
-            //TODO: Continue
-        }
+        cellIndicator.SetActive(false);
+        if (previewObject != null)
+            Destroy(previewObject);
     }
 
     private void ApplyFeedbackToPreview(bool validity)
@@ -130,14 +117,110 @@ public class PreviewSystem : MonoBehaviour
     {
         previewObject.transform.position = new Vector3(position.x, position.y + previewOffset, position.z);
     }
+#endregion
 
+    #region FloorPlacement
+
+    public void StartShowingFloorPlacementPreview(GameObject prefab, Vector3Int initialPos)
+    {
+        rectangleInitialPos = initialPos;
+        floorPrefab = prefab;
+
+        previewObject = Instantiate(floorPrefab);
+        previewObjects.Add(previewObject);
+        PrepareFloorPreview(previewObjects);
+        PrepareCursor(Vector2Int.one);
+        cellIndicator.SetActive(true);
+    }
+
+    private void PrepareFloorPreview(List<GameObject> previewObjects)
+    {
+        foreach (GameObject previewObject in previewObjects)
+        {
+            Renderer[] renderers = previewObject.GetComponentsInChildren<Renderer>();
+            foreach (Renderer renderer in renderers)
+            {
+                Material[] materials = renderer.materials;
+                for (int i = 0; i < materials.Length; i++)
+                {
+                    materials[i] = previewMaterialInstance;
+                }
+
+                renderer.materials = materials;
+            }
+        }
+    }
+
+    public void UpdateFloorPosition(List<Vector3> gridRectangle, bool validity)
+    {
+        ClearPreviousFloorPreview();
+        foreach (Vector3 gridPosition in gridRectangle)
+        {
+            CreateFloorPreview(gridPosition);
+        }
+        ApplyFeedbackToPreview(validity);
+        ApplyFeedbackToCursor(validity);
+    }
+
+    private void CreateFloorPreview(Vector3 position)
+    {
+        previewObject = Instantiate(floorPrefab);
+        previewObject.transform.position = new Vector3(position.x, position.y + previewOffset, position.z);
+        Renderer[] renderers = previewObject.GetComponentsInChildren<Renderer>();
+        foreach (Renderer renderer in renderers)
+        {
+            Material[] materials = renderer.materials;
+            for (int i = 0; i < materials.Length; i++)
+            {
+                materials[i] = previewMaterialInstance;
+            }
+
+            renderer.materials = materials;
+        }
+        previewObjects.Add(previewObject);
+    }
+
+    private void ClearPreviousFloorPreview()
+    {
+        if (previewObjects != null)
+        {
+            foreach (GameObject go in previewObjects)
+            {
+                if (go != null)
+                    Destroy(go);
+            }
+
+            previewObjects.Clear();
+        }
+    }
+
+    public void StopShowingFloorPreview()
+    {
+        cellIndicator.SetActive(false);
+        if (previewObjects != null)
+        {
+            foreach(GameObject go in previewObjects)
+            {
+                if (go != null)
+                    Destroy(go);
+            }
+
+            previewObjects.Clear();
+        }
+        rectangleInitialPos = Vector3Int.zero;
+    }
+
+    #endregion
+
+    #region Remove Preview
     public void StartShowingRemovePreview()
     {
         cellIndicator.SetActive(true);
         PrepareCursor(Vector2Int.one);
         ApplyFeedbackToCursor(false);
     }
-    
+    #endregion
+
     #region Connection preview
     public void PrepareConnectingCursor()
     {

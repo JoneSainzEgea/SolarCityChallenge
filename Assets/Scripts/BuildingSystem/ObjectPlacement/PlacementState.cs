@@ -47,7 +47,7 @@ public class PlacementState : IBuildingState
         if (selectedObjectIndex > -1)
         {
             behaviour = database.objectsData[selectedObjectIndex].BuildBehaviour;
-            behaviour.StartPreview(previewSystem, database.objectsData[selectedObjectIndex].Prefab, database.objectsData[selectedObjectIndex].Size);
+            behaviour.StartPreview(previewSystem, database.objectsData[selectedObjectIndex].Prefab, database.objectsData[selectedObjectIndex].Size, grid, gridData);
         }
         else
             throw new System.Exception($"No object with ID {ID}");
@@ -61,7 +61,7 @@ public class PlacementState : IBuildingState
             soundFeedback.PlaySound(SoundType.WrongPlacement);
             return false;
         }
-        if (!behaviour.CanPlace(gridPosition, grid, gridData))
+        if (!behaviour.CanPlace(gridPosition))
         {
             soundFeedback.PlaySound(SoundType.WrongPlacement);
             return false;
@@ -69,7 +69,7 @@ public class PlacementState : IBuildingState
         soundFeedback.PlaySound(SoundType.Place);
         behaviour.Place(objectPlacer, ID, database.objectsData[selectedObjectIndex].EnergyProduction);
 
-        previewSystem.UpdatePosition(grid.CellToWorld(gridPosition), false);
+        behaviour.UpdatePreview(gridPosition);
         return true;
     }
 

@@ -18,19 +18,20 @@ public class DefaultBuildBehaviourSO : BuildBehaviourSO
     private GridDataManager gridData;
     private ResourceManagement resourceManagement;
     PreviewSystem preview;
-    public override void StartPreview(PreviewSystem preview, GameObject prefab, Vector2Int size)
+    public override void StartPreview(PreviewSystem preview, GameObject prefab, Vector2Int size, Grid grid, GridDataManager gridData)
     {
         this.preview = preview;
         this.prefab = prefab;
         this.size = size;
+        this.grid = grid;
+        this.gridData = gridData;
+
         preview.StartShowingPlacementPreview(prefab, size);
     }
 
-    public override bool CanPlace(Vector3Int pos, Grid grid, GridDataManager gridData)
+    public override bool CanPlace(Vector3Int pos)
     {
         this.pos = pos;
-        this.grid = grid;
-        this.gridData = gridData;
 
         // Has floor and doesn't have furniture
         GridData floorData = gridData.GetGridData(GridDataType.FloorData);
@@ -54,6 +55,6 @@ public class DefaultBuildBehaviourSO : BuildBehaviourSO
 
     public override void UpdatePreview(Vector3Int gridPosition)
     {
-        preview.UpdatePosition(grid.CellToWorld(gridPosition), CanPlace(gridPosition, grid, gridData));
+        preview.UpdatePosition(grid.CellToWorld(gridPosition), CanPlace(gridPosition));
     }
 }

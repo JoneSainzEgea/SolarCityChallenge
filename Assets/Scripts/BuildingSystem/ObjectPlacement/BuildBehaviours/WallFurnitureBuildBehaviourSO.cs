@@ -12,19 +12,20 @@ public class WallFurnitureBuildBehaviourSO : BuildBehaviourSO
     private GridDataManager gridData;
     private ResourceManagement resourceManagement;
     private PreviewSystem preview;
-    public override void StartPreview(PreviewSystem preview, GameObject prefab, Vector2Int size)
+    public override void StartPreview(PreviewSystem preview, GameObject prefab, Vector2Int size, Grid grid, GridDataManager gridData)
     {
         this.preview = preview;
         this.prefab = prefab;
         this.size = size;
+        this.grid = grid;
+        this.gridData = gridData;
+
         preview.StartShowingPlacementPreview(prefab, size);
     }
 
-    public override bool CanPlace(Vector3Int pos, Grid grid, GridDataManager gridData)
+    public override bool CanPlace(Vector3Int pos)
     {
         this.pos = pos;
-        this.grid = grid;
-        this.gridData = gridData;
 
         // Has wall and doesn't have wall furniture
         GridData wallData = gridData.GetGridData(GridDataType.WallData);
@@ -48,6 +49,6 @@ public class WallFurnitureBuildBehaviourSO : BuildBehaviourSO
 
     public override void UpdatePreview(Vector3Int gridPosition)
     {
-        preview.UpdatePosition(grid.CellToWorld(gridPosition), CanPlace(gridPosition, grid, gridData));
+        preview.UpdatePosition(grid.CellToWorld(gridPosition), CanPlace(gridPosition));
     }
 }

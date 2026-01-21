@@ -8,6 +8,7 @@
  */
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 [CreateAssetMenu(menuName = "Building/Behaviours/Floor")]
 public class FloorBuildBehaviourSO : BuildBehaviourSO
@@ -22,20 +23,20 @@ public class FloorBuildBehaviourSO : BuildBehaviourSO
     private ResourceManagement resourceManagement;
     private bool isFirstClick = true;
     private PreviewSystem preview;
-    public override void StartPreview(PreviewSystem preview, GameObject prefab, Vector2Int size)
+    public override void StartPreview(PreviewSystem preview, GameObject prefab, Vector2Int size, Grid grid, GridDataManager gridData)
     {
         this.prefab = prefab;
         this.size = size;
         this.preview = preview;
+        this.grid = grid;
+        this.gridData = gridData;
 
         isFirstClick = true;
         preview.StartShowingPlacementPreview(prefab, size);
     }
 
-    public override bool CanPlace(Vector3Int pos, Grid grid, GridDataManager gridData)
+    public override bool CanPlace(Vector3Int pos)
     {
-        this.grid = grid;
-        this.gridData = gridData;
         GridData floorData = gridData.GetGridData(GridDataType.FloorData);
         if (isFirstClick)
         {
@@ -69,18 +70,24 @@ public class FloorBuildBehaviourSO : BuildBehaviourSO
 
         if (isFirstClick)
         {
+            preview.StopShowingPreview();
+            
             preview.StartShowingFloorPlacementPreview(prefab, pos1);
 
             isFirstClick = false;
         }
         else
         {
+            preview.StopShowingFloorPreview();
             foreach (Vector3Int posRect in gridRectangle)
             {
                 int index = placer.PlaceObject(prefab, grid.CellToWorld(posRect), energyProduction, resourceManagement);
 
-                floorData.AddObjectAt(pos1, size, ID, index);
-            } 
+                floorData.AddObjectAt(posRect, size, ID, index);
+            }
+
+            isFirstClick = true;
+            preview.StartShowingPlacementPreview(prefab, size);
         }
     }
 
@@ -90,14 +97,14 @@ public class FloorBuildBehaviourSO : BuildBehaviourSO
 
         int minX = Mathf.Min(pos1.x, pos2.x);
         int maxX = Mathf.Max(pos1.x, pos2.x);
-        int minY = Mathf.Min(pos1.y, pos2.y);
-        int maxY = Mathf.Max(pos1.y, pos2.y);
+        int minZ = Mathf.Min(pos1.z, pos2.z);
+        int maxZ = Mathf.Max(pos1.z, pos2.z);
 
-        int z = pos1.z;
+        int y = pos1.y;
 
         for (int x = minX; x <= maxX; x++)
         {
-            for (int y = minY; y <= maxY; y++)
+            for (int z = minZ; z <= maxZ; z++)
             {
                 positions.Add(new Vector3Int(x, y, z));
             }
@@ -106,21 +113,46 @@ public class FloorBuildBehaviourSO : BuildBehaviourSO
         return positions;
     }
 
+    private List<Vector3Int> GetGridRectangleEdges(Vector3Int pos1, Vector3Int pos2)
+    {
+        List<Vector3Int> edges = new List<Vector3Int>();
+
+        int minX = Mathf.Min(pos1.x, pos2.x);
+        int maxX = Mathf.Max(pos1.x, pos2.x);
+        int minZ = Mathf.Min(pos1.z, pos2.z);
+        int maxZ = Mathf.Max(pos1.z, pos2.z);
+
+        int y = pos1.y;
+        for (int x = minX; x <= maxX; x++)
+        {
+            edges.Add(new Vector3Int(x, y, minZ));
+            edges.Add(new Vector3Int(x, y, maxZ));
+        }
+
+        for (int z = minZ + 1; z < maxZ; z++)
+        {
+            edges.Add(new Vector3Int(minX, y, z));
+            edges.Add(new Vector3Int(maxX, y, z));
+        }
+        return edges;
+    }
+
     public override void UpdatePreview(Vector3Int gridPosition)
     {
         if (isFirstClick)
-            preview.UpdatePosition(grid.CellToWorld(gridPosition), CanPlace(gridPosition, grid, gridData));
+            preview.UpdatePosition(grid.CellToWorld(gridPosition), CanPlace(gridPosition));
         else
-        {
+        {         
             List<Vector3Int> gridPositions = GetGridRectangle(pos1, gridPosition);
             List<Vector3> gridVectorPositions = new List<Vector3>();
-            List<bool> canPlace = new List<bool>();
+            bool validity = true;
             foreach (Vector3Int pos in gridPositions)
             {
                 gridVectorPositions.Add(grid.CellToWorld(pos));
-                canPlace.Add(CanPlace(gridPosition, grid, gridData));
+                if(!CanPlace(gridPosition))
+                    validity = false;
             }
-            preview.UpdateFloorPosition(gridVectorPositions, canPlace);
+            preview.UpdateFloorPosition(gridVectorPositions, validity);
         }
     }
 }

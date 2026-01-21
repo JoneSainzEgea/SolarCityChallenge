@@ -11,9 +11,9 @@ using UnityEngine;
 
 public abstract class BuildBehaviourSO : ScriptableObject
 {
-    public abstract void StartPreview(PreviewSystem preview, GameObject prefab, Vector2Int size);
+    public abstract void StartPreview(PreviewSystem preview, GameObject prefab, Vector2Int size, Grid grid, GridDataManager gridData);
 
-    public abstract bool CanPlace(Vector3Int gridPosition, Grid grid, GridDataManager gridData);
+    public abstract bool CanPlace(Vector3Int gridPosition);
 
     public abstract bool HasMoney(ResourceManagement resourceManagement, int prize);
 

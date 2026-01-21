@@ -30,8 +30,8 @@ public class ObjectPlacer : MonoBehaviour
         BuildingComponent component = newObject.GetComponentInChildren<BuildingComponent>();
         if (component != null)
             component.OnPlacement(energyProduction, resManager);
-        else
-            Debug.LogWarning("El prefab del componente no tiene el script de componente");
+        //else
+        //    Debug.LogWarning("El prefab del componente no tiene el script de componente");
 
         placedGameObjects.Add(newObject);
         

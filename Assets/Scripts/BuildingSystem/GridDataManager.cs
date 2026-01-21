@@ -38,31 +38,53 @@ public class GridDataManager
         }
     }
 
-    public GridData GetGridDataType(Vector3Int pos, Vector2Int size)
+    public GridData GetGridDataFromPos(Vector3Int pos, Vector2Int size)
     {
         GridData selectedData = null;
         if (furnitureData.CanPlaceObjectAt(pos, size) == false)
         {
             selectedData = furnitureData;
         }
-        else if (floorData.CanPlaceObjectAt(pos, size) == false)
+        else if (wallFurnitureData.CanPlaceObjectAt(pos, size) == false)
         {
-            selectedData = floorData;
+            selectedData = wallFurnitureData;
         }
         else if (wallData.CanPlaceObjectAt(pos, size) == false)
         {
             selectedData = wallData;
         }
+        else if (floorData.CanPlaceObjectAt(pos, size) == false)
+        {
+            selectedData = floorData;
+        }
+        return selectedData;
+    }
+
+    public GridDataType GetGridDataType(Vector3Int pos, Vector2Int size)
+    {
+        GridDataType selectedData = GridDataType.FurnitureData;
+        if (furnitureData.CanPlaceObjectAt(pos, size) == false)
+        {
+            selectedData = GridDataType.FurnitureData;
+        }
         else if (wallFurnitureData.CanPlaceObjectAt(pos, size) == false)
         {
-            selectedData = wallFurnitureData;
+            selectedData = GridDataType.WallFurnitureData;
+        }
+        else if (wallData.CanPlaceObjectAt(pos, size) == false)
+        {
+            selectedData = GridDataType.WallData;
+        }
+        else if (floorData.CanPlaceObjectAt(pos, size) == false)
+        {
+            selectedData = GridDataType.FloorData;
         }
         return selectedData;
     }
 
     public bool IsOccupied(Vector3Int pos, Vector2Int size)
     {
-        GridData selectedData = GetGridDataType(pos, size);
+        GridData selectedData = GetGridDataFromPos(pos, size);
         if (selectedData == null)
             return false;
         return true;

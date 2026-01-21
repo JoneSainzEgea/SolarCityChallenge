@@ -45,7 +45,7 @@ public class ConnectingState : IBuildingState
 
     public bool OnAction(Vector3Int gridPosition)
     {
-        GridData selectedData = gridData.GetGridDataType(gridPosition, Vector2Int.one);
+        GridData selectedData = gridData.GetGridDataFromPos(gridPosition, Vector2Int.one);
 
         if (selectedData == null)
         {
