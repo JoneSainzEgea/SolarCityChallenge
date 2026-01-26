@@ -22,7 +22,9 @@ public class ObjectPlacer : MonoBehaviour
     private List<List<GameObject>> groupedGameObjects = new();
     public bool isConnecting = false;
     private BuildingComponent component1, component2;
+    private int groupIndex = -1;
 
+    #region Object Placement and Removal
     public int PlaceObject(GameObject prefab, Vector3 position, float energyProduction, ResourceManagement resManager)
     {
         // TODO: que sean hijos de un objeto concreto para limpieza de jerarquía
@@ -40,17 +42,6 @@ public class ObjectPlacer : MonoBehaviour
         return placedGameObjects.Count - 1;
     }
 
-    public int PlaceGroupObject(GameObject prefab, Vector3 position)
-    {
-        // TODO: que sean hijos de un objeto concreto para limpieza de jerarquía
-        GameObject newObject = Instantiate(prefab);
-        newObject.transform.position = position;
-
-        //groupedGameObjects[0].Add(newObject);
-
-        return groupedGameObjects.Count - 1;
-    }
-
     public void RemoveObjectAt(int gameObjectIndex)
     {
         if (placedGameObjects.Count <= gameObjectIndex || placedGameObjects[gameObjectIndex] == null)
@@ -58,14 +49,37 @@ public class ObjectPlacer : MonoBehaviour
         Destroy(placedGameObjects[gameObjectIndex]);
         placedGameObjects[gameObjectIndex] = null;
     }
+    #endregion
+
+    #region Grouped Objects
+    public int CreateNewGroup()
+    {
+        groupIndex++;
+        groupedGameObjects.Add(new List<GameObject>());
+        return groupIndex;
+    }
+
+    public void PlaceGroupObject(GameObject prefab, Vector3 position)
+    {
+        // TODO: que sean hijos de un objeto concreto para limpieza de jerarquía
+        GameObject newObject = Instantiate(prefab);
+        newObject.transform.position = position;
+        groupedGameObjects[groupIndex].Add(newObject);
+    }
 
     public void RemoveGroupObjectAt(int groupObjectIndex)
     {
         if (groupedGameObjects.Count <= groupObjectIndex || groupedGameObjects[groupObjectIndex] == null)
             return;
-        //Destroy(groupedGameObjects[groupObjectIndex]);
+        foreach(GameObject go in groupedGameObjects[groupObjectIndex])
+        {
+            Destroy(go);
+        }
         groupedGameObjects[groupObjectIndex] = null;
     }
+    #endregion
+
+    #region Connections
 
     public void StartConnectingAt(int gameObjectIndex)
     {
@@ -97,4 +111,5 @@ public class ObjectPlacer : MonoBehaviour
 
         isConnecting = false;
     }
+    #endregion
 }

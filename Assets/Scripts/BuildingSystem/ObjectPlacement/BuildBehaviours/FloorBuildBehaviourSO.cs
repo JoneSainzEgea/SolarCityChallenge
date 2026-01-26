@@ -79,9 +79,10 @@ public class FloorBuildBehaviourSO : BuildBehaviourSO
         else
         {
             preview.StopShowingFloorPreview();
+            int groupIndex = placer.CreateNewGroup();
             foreach (Vector3Int posRect in gridRectangle)
             {
-                int groupIndex = placer.PlaceGroupObject(prefab, grid.CellToWorld(posRect));
+                placer.PlaceGroupObject(prefab, grid.CellToWorld(posRect));
                 floorData.AddObjectAt(posRect, size, ID, groupIndex);
                 floorData.AddObjectToGroup(posRect, groupIndex);
             }

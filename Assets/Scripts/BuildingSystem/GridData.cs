@@ -53,6 +53,13 @@ public class GridData
         return returnVal;
     }
 
+    public bool IsOccupied(Vector3Int position)
+    {
+        if (placedObjects.ContainsKey(position))
+            return true;
+        return false;
+    }
+
     public bool CanPlaceObjectAt(Vector3Int gridPosition, Vector2Int objectSize)
     {
         List<Vector3Int> positionToOccupy = CalculatePositions(gridPosition, objectSize);
@@ -64,6 +71,23 @@ public class GridData
         }
    
         return true;
+    }
+
+    public List<Vector3Int> GetGroupPositions(Vector3Int position)
+    {
+        List<Vector3Int> groupPositions = new List<Vector3Int>();
+
+        if (dataGroups.ContainsKey(position))
+        {
+            int groupIndex = dataGroups[position];
+            foreach (KeyValuePair<Vector3Int, int> pair in dataGroups)
+            {
+                if (pair.Value == groupIndex)
+                    groupPositions.Add(pair.Key);
+            }
+        }
+
+        return groupPositions;
     }
 
     public int GetRepresentationIndex(Vector3Int gridPosition)

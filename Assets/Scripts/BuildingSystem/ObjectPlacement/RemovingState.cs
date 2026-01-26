@@ -69,6 +69,7 @@ public class RemovingState : IBuildingState
         if (!behaviour.CanRemove(gridPosition))
         {
             soundFeedback.PlaySound(SoundType.WrongPlacement);
+            Debug.Log("has furniture");
             return false;
         }
 
