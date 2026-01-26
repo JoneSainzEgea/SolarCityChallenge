@@ -12,3 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5184619d4b1a78146b8715ec1cfea51b, type: 3}
   m_Name: FloorBuildBehaviour
   m_EditorClassIdentifier: 
+  dafaultWallPrefab: {fileID: 4553453013749246068, guid: d0755535b106c4c46a5030d4dc70ad3b, type: 3}
+  wallID: 1

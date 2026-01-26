@@ -2,9 +2,12 @@
  * Jone Sainz Egea
  * 21/01/2026
  *
- * ScriptableObject que define
+ * ScriptableObject que define el caso específico de eliminación del suelo. Hereda de la interfaz IRemoveBehaviour.
+ * Para saber si se puede eliminar el suelo, compureba que no haya muebles encima de él.
+ * Elimina el grupo completo del suelo de golpe, junto con sus paredes y decoraciones de pared, además de sus datos.
+ * Actualiza los recursos, devolviendo el dinero invertido.
  * 
- * v1 -21/01/2026- 
+ * v1 -21/01/2026- eliminación del suelo junto a paredes y decoraciones de pared.
  */
 using System.Collections.Generic;
 using UnityEngine;
@@ -47,6 +50,9 @@ public class FloorRemoveBehaviour : IRemoveBehaviour
         return true;
     }
 
+    /*
+     * Removes floor data and object, also walls and wall furnitures
+     */
     public void Remove(ObjectPlacer placer, int index)
     {
         selectedData.RemoveObjectAt(pos);
@@ -61,7 +67,7 @@ public class FloorRemoveBehaviour : IRemoveBehaviour
             {
                 int i = wallData.GetRepresentationIndex(position);
                 wallData.RemoveObjectAt(position);
-                placer.RemoveObjectAt(i);
+                placer.RemoveGroupObjectAt(i);
             }
             if (wallFurnitureData.IsOccupied(position))
             {
@@ -70,7 +76,13 @@ public class FloorRemoveBehaviour : IRemoveBehaviour
                 placer.RemoveObjectAt(i);
             }
         }
-        // Removes walls, and wall furniture
+    }
+
+    public void UpdateResources(ResourceManagement resourceManagement, int prize)
+    {
+        resourceManagement.AddResource(ResourceType.Money, prize * floorPositions.Count);
+
+        // TODO: return money from furniture and manually placed walls
     }
 
     public void UpdatePreview(Vector3Int gridPosition)

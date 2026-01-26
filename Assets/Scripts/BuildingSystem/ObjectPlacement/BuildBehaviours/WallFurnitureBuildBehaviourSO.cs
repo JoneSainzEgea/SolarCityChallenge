@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+// TODO
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Building/Behaviours/WallFurniture")]
@@ -12,6 +11,7 @@ public class WallFurnitureBuildBehaviourSO : BuildBehaviourSO
     private GridDataManager gridData;
     private ResourceManagement resourceManagement;
     private PreviewSystem preview;
+    private int prize;
     public override void StartPreview(PreviewSystem preview, GameObject prefab, Vector2Int size, Grid grid, GridDataManager gridData)
     {
         this.preview = preview;
@@ -36,6 +36,8 @@ public class WallFurnitureBuildBehaviourSO : BuildBehaviourSO
     public override bool HasMoney(ResourceManagement resourceManagement, int prize)
     {
         this.resourceManagement = resourceManagement;
+        this.prize = prize;
+
         return (resourceManagement.GetResourceAmount(ResourceType.Money) >= prize);
     }
 
@@ -45,6 +47,11 @@ public class WallFurnitureBuildBehaviourSO : BuildBehaviourSO
 
         GridData wallFurnitureData = gridData.GetGridData(GridDataType.WallFurnitureData);
         wallFurnitureData.AddObjectAt(pos, size, ID, index);
+    }
+
+    public override void RemoveResources()
+    {
+        resourceManagement.RemoveResource(ResourceType.Money, prize);
     }
 
     public override void UpdatePreview(Vector3Int gridPosition)

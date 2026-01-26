@@ -2,9 +2,12 @@
  * Jone Sainz Egea
  * 20/01/2026
  *
- * Controlador de los distintos tipos de GridData
+ * Controlador de los distintos tipos de GridData. Funciona como sistema central, facilita la comunicación.
+ * Define e inicializa los distintos tipos de GridData: FloorData, WallData, FurnitureData y WallFurnitureData.
+ * Contiene métodos para acceder a los GridData a través del tipo o de la posición.
+ * También para obtener el tipo de GridData de una posición. Y para saber si hay data de una posición.
  * 
- * v1 -20/01/2026- 
+ * v1 -20/01/2026- InitializeGridData, GetGridData, GetGridDataFromPos, GetGridDataType, IsOccupied.
  */
 using UnityEngine;
 

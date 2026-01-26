@@ -93,8 +93,7 @@ public class RemovingState : IBuildingState
 
     public void UpdateResources()
     {
-        resourceManagement.AddResource(ResourceType.Money, database.objectsData[gameObjectID].Prize);
-        resourceManagement.RemoveResource(ResourceType.Energy, database.objectsData[gameObjectID].EnergyProduction);
+        behaviour.UpdateResources(resourceManagement, database.objectsData[gameObjectID].Prize);
     }
 
     public void EndState()

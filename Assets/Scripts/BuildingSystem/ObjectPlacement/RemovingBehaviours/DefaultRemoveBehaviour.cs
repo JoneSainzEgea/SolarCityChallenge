@@ -2,9 +2,10 @@
  * Jone Sainz Egea
  * 21/01/2026
  *
- * ScriptableObject que define
+ * ScriptableObject que define el caso genérico de eliminación de objetos. Hereda de la interfaz IRemoveBehaviour.
+ * Se encarga de la comprobación de que se pueda eliminar, la eliminación del objeto y sus datos y la actualización de recursos.
  * 
- * v1 -21/01/2026- 
+ * v1 -21/01/2026- inicializa y elimina el objeto que haya en la posición indicada.
  */
 using UnityEngine;
 
@@ -37,6 +38,11 @@ public class DefaultRemoveBehaviour : IRemoveBehaviour
     {
         selectedData.RemoveObjectAt(pos);
         placer.RemoveObjectAt(index);
+    }
+
+    public void UpdateResources(ResourceManagement resourceManagement, int prize)
+    {
+
     }
 
     public void UpdatePreview(Vector3Int gridPosition)

@@ -79,7 +79,7 @@ public class PlacementState : IBuildingState
     }
     public void UpdateResources()
     {
-        resourceManagement.RemoveResource(ResourceType.Money, database.objectsData[selectedObjectIndex].Prize);
+        behaviour.RemoveResources();
     }
 
     public void EndState()

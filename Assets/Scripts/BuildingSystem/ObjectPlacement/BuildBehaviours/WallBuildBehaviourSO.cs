@@ -2,10 +2,11 @@
  * Jone Sainz Egea
  * 19/01/2026
  *
- * ScriptableObject que define
+ * ScriptableObject que define el caso específico de construcción de paredes. Hereda de BuildBehaviourSO.
  * 
  * v1 -19/01/2026- 
  */
+using System.Drawing;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Building/Behaviours/Wall")]
@@ -18,6 +19,7 @@ public class WallBuildBehaviourSO : BuildBehaviourSO
     private GridDataManager gridData;
     private ResourceManagement resourceManagement;
     private PreviewSystem preview;
+    private int prize;
     public override void StartPreview(PreviewSystem preview, GameObject prefab, Vector2Int size, Grid grid, GridDataManager gridData)
     {
         this.preview = preview;
@@ -43,6 +45,7 @@ public class WallBuildBehaviourSO : BuildBehaviourSO
     {
         // TODO: change calc for amount of wall
         this.resourceManagement = resourceManagement;
+        this.prize = prize;
         return (resourceManagement.GetResourceAmount(ResourceType.Money) >= prize);
     }
 
@@ -52,6 +55,11 @@ public class WallBuildBehaviourSO : BuildBehaviourSO
 
         GridData wallData = gridData.GetGridData(GridDataType.WallData);
         wallData.AddObjectAt(pos, size, ID, index);
+    }
+
+    public override void RemoveResources()
+    {
+        resourceManagement.RemoveResource(ResourceType.Money, prize);
     }
 
     public override void UpdatePreview(Vector3Int gridPosition)
