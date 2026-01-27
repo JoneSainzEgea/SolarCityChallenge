@@ -51,6 +51,25 @@ public class ObjectPlacer : MonoBehaviour
     }
     #endregion
 
+    #region WallPlacement
+    public void WallPositioning(GameObject[] prefabs, Vector3 basePosition, WallType type)
+    {
+        if (!WallConfigurations.WallConfigs.TryGetValue(type, out WallConfig config))
+        {
+            Debug.LogWarning($"WallType no configurado: {type}");
+            return;
+        }
+
+        GameObject prefab = prefabs[config.prefabIndex];
+        Vector3 position = basePosition + config.offset;
+        Quaternion rotation = Quaternion.Euler(config.rotation);
+
+        GameObject newWall = Instantiate(prefab, position, rotation);
+        groupedGameObjects[groupIndex].Add(newWall);
+    }
+
+    #endregion
+
     #region Grouped Objects
     public int CreateNewGroup()
     {

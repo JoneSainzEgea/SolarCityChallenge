@@ -9,6 +9,29 @@
 using System.Drawing;
 using UnityEngine;
 
+public enum WallType
+{
+    Left,
+    Right,
+    Bottom,
+    Top,
+
+    CornerBL,
+    CornerTL,
+    CornerBR,
+    CornerTR,
+
+    Vertical,
+    VerticalCornerStart,
+    VerticalCornerEnd,
+
+    Horizontal,
+    HorizontalCornerStart,
+    HorizontalCornerEnd,
+
+    Single
+}
+
 [CreateAssetMenu(menuName = "Building/Behaviours/Wall")]
 public class WallBuildBehaviourSO : BuildBehaviourSO
 {

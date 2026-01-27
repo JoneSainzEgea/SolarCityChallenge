@@ -65,7 +65,7 @@ public class FloorRemoveBehaviour : IRemoveBehaviour
         {
             if (wallData.IsOccupied(position))
             {
-                int i = wallData.GetRepresentationIndex(position);
+                int i = wallData.GetGroupRepresentationIndex(position);
                 wallData.RemoveObjectAt(position);
                 placer.RemoveGroupObjectAt(i);
             }

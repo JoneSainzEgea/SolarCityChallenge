@@ -103,6 +103,13 @@ public class GridData
         return placedObjects[gridPosition].ID;
     }
 
+    public int GetGroupRepresentationIndex(Vector3Int gridPosition)
+    {
+        if (dataGroups.ContainsKey(gridPosition) == false)
+            return -1;
+        return dataGroups[gridPosition];
+    }
+
     public void RemoveObjectAt(Vector3Int gridPosition)
     {
         List<Vector3Int> keysToRemove = new List<Vector3Int>();

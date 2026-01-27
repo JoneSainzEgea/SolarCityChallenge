@@ -45,6 +45,8 @@ public class PlacementSystem : MonoBehaviour
 
         gridDataManager = new();
         gridDataManager.InitializeGridData();
+
+        WallConfigurations.InitializeWallConfigs();
     }
 
     private void Update()

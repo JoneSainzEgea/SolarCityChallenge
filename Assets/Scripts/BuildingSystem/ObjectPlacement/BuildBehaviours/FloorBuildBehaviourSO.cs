@@ -20,10 +20,11 @@ public class FloorBuildBehaviourSO : BuildBehaviourSO
     private Vector3Int pos1;
     private Vector3Int pos2;
     List<Vector3Int> gridRectangle;
-    List<Vector3Int> gridRectangleEdges;
+    Dictionary<Vector3Int, WallType> gridRectangleEdges;
     private GameObject prefab;
     private int prize;
-    [SerializeField] private GameObject dafaultWallPrefab;
+    [SerializeField] private GameObject[] wallPrefabs;
+
     [SerializeField] private int wallID;
     private Grid grid;
     private GridDataManager gridData;
@@ -112,11 +113,11 @@ public class FloorBuildBehaviourSO : BuildBehaviourSO
 
         int groupIndex = placer.CreateNewGroup();
 
-        foreach (Vector3Int posEdge in gridRectangleEdges)
+        foreach (KeyValuePair<Vector3Int, WallType> pair in gridRectangleEdges)
         {
-            placer.PlaceGroupObject(dafaultWallPrefab, grid.CellToWorld(posEdge));
-            wallData.AddObjectAt(posEdge, Vector2Int.one, wallID, groupIndex);
-            wallData.AddObjectToGroup(posEdge, groupIndex);
+            placer.WallPositioning(wallPrefabs, grid.CellToWorld(pair.Key), pair.Value);
+            wallData.AddObjectAt(pair.Key, Vector2Int.one, wallID, groupIndex);
+            wallData.AddObjectToGroup(pair.Key, groupIndex);
         }
     }
 
@@ -148,44 +149,62 @@ public class FloorBuildBehaviourSO : BuildBehaviourSO
         return positions;
     }
 
-    private List<Vector3Int> GetGridRectangleEdges(Vector3Int pos1, Vector3Int pos2)
+    private Dictionary<Vector3Int, WallType> GetGridRectangleEdges(Vector3Int pos1, Vector3Int pos2)
     {
-        List<Vector3Int> edges = new List<Vector3Int>();
+        Dictionary<Vector3Int, WallType> edges = new Dictionary<Vector3Int, WallType>();
 
         int minX = Mathf.Min(pos1.x, pos2.x);
         int maxX = Mathf.Max(pos1.x, pos2.x);
         int minZ = Mathf.Min(pos1.z, pos2.z);
         int maxZ = Mathf.Max(pos1.z, pos2.z);
-
         int y = pos1.y;
 
+        // Vertical line
         if (minX == maxX)
         {
-            for (int z = minZ; z <= maxZ; z++)
+            // Single square
+            if (minZ == maxZ)
             {
-                edges.Add(new Vector3Int(minX, y, z));
+                edges.Add(new Vector3Int(minX, y, minZ), WallType.Single);
+                return edges;
             }
-        }
-        else if (minZ == maxZ)
-        {
-            for (int x = minX; x <= maxX; x++)
-            {
-                edges.Add(new Vector3Int(x, y, minZ));
-            }
-        }
-        else
-        {
-            for (int x = minX; x <= maxX; x++)
-            {
-                edges.Add(new Vector3Int(x, y, minZ));
-                edges.Add(new Vector3Int(x, y, maxZ));
-            }
+
             for (int z = minZ + 1; z < maxZ; z++)
-            {
-                edges.Add(new Vector3Int(minX, y, z));
-                edges.Add(new Vector3Int(maxX, y, z));
-            }
+                edges.Add(new Vector3Int(minX, y, z), WallType.Vertical);
+            edges.Add(new Vector3Int(minX, y, minZ), WallType.VerticalCornerStart);
+            edges.Add(new Vector3Int(minX, y, maxZ), WallType.VerticalCornerEnd);
+            return edges;
         }
+
+        // Horizontal line
+        if (minZ == maxZ)
+        {
+            for (int x = minX + 1; x < maxX; x++)
+                edges.Add(new Vector3Int(x, y, minZ), WallType.Horizontal);
+
+
+            edges.Add(new Vector3Int(minX, y, minZ), WallType.HorizontalCornerStart);
+            edges.Add(new Vector3Int(maxX, y, minZ), WallType.HorizontalCornerEnd);
+            return edges;
+        }
+
+        // Full rectangle
+        for (int x = minX + 1; x < maxX; x++)
+        {
+            edges.Add(new Vector3Int(x, y, minZ), WallType.Bottom);
+            edges.Add(new Vector3Int(x, y, maxZ), WallType.Top);
+        }
+        for (int z = minZ + 1; z < maxZ; z++)
+        {
+            edges.Add(new Vector3Int(minX, y, z), WallType.Left);
+            edges.Add(new Vector3Int(maxX, y, z), WallType.Right);
+        }
+        edges.Add(new Vector3Int(minX, y, minZ), WallType.CornerBL);
+        edges.Add(new Vector3Int(minX, y, maxZ), WallType.CornerTL);
+        edges.Add(new Vector3Int(maxX, y, minZ), WallType.CornerBR);
+        edges.Add(new Vector3Int(maxX, y, maxZ), WallType.CornerTR);
+
+
         return edges;
     }
 
