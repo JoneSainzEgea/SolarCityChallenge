@@ -11,7 +11,7 @@ using UnityEngine;
 
 public interface IRemoveBehaviour
 {
-    public abstract void Initialize(PreviewSystem preview, Grid grid, GridData selectedData, GridDataManager gridData);
+    public abstract void Initialize(PreviewSystem preview, ObjectPlacer placer, Grid grid, GridData selectedData, GridDataManager gridData);
 
     public abstract bool CanRemove(Vector3Int gridPosition);
 
@@ -19,5 +19,5 @@ public interface IRemoveBehaviour
 
     public abstract void UpdateResources(ResourceManagement resourceManagement, int prize);
 
-    public abstract void UpdatePreview(Vector3Int gridPosition);
+    public abstract void UpdatePreview(Vector3Int gridPosition, GameObject gameObjectToRemove);
 }

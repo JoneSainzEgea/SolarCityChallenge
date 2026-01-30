@@ -9,6 +9,7 @@
  * v2 -10/12/2025- llama a OnPlacement del componente.
  * v3 -11/12/2025- conecta componentes.
  * v4 -21/01/2026- crea y elimina grupos de objetos.
+ * v5 -30/01/2026- GetGameObjectAt añadido para la previsualización del removing state.
  * 
  * TODO: que sean hijos de un objeto concreto para limpieza de jerarquía
  */
@@ -48,6 +49,16 @@ public class ObjectPlacer : MonoBehaviour
             return;
         Destroy(placedGameObjects[gameObjectIndex]);
         placedGameObjects[gameObjectIndex] = null;
+    }
+
+    public GameObject GetGameObjectAt(int gameObjectIndex)
+    {
+        if (placedGameObjects.Count <= gameObjectIndex || placedGameObjects[gameObjectIndex] == null)
+        {
+            Debug.LogWarning("No object to remove found");
+            return null;
+        }
+        return placedGameObjects[gameObjectIndex];
     }
     #endregion
 

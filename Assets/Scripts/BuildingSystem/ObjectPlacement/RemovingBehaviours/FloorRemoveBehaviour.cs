@@ -15,15 +15,17 @@ using UnityEngine;
 public class FloorRemoveBehaviour : IRemoveBehaviour
 {
     PreviewSystem preview;
+    ObjectPlacer placer;
     Grid grid;
     GridDataManager gridData;
     GridData selectedData;
     Vector3Int pos;
     List<Vector3Int> floorPositions;
 
-    public void Initialize(PreviewSystem preview, Grid grid, GridData selectedData, GridDataManager gridData)
+    public void Initialize(PreviewSystem preview, ObjectPlacer placer, Grid grid, GridData selectedData, GridDataManager gridData)
     {
         this.preview = preview;
+        this.placer = placer;
         this.grid = grid;
         this.selectedData = selectedData;
         this.gridData = gridData;
@@ -92,7 +94,7 @@ public class FloorRemoveBehaviour : IRemoveBehaviour
         // TODO: return money from furniture and manually placed walls
     }
 
-    public void UpdatePreview(Vector3Int gridPosition)
+    public void UpdatePreview(Vector3Int gridPosition, GameObject gameObjectToRemove)
     {
         throw new System.NotImplementedException();
     }

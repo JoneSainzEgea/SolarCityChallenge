@@ -58,12 +58,12 @@ public class RemovingState : IBuildingState
         else if (gridData.GetGridDataType(gridPosition, Vector2Int.one) == GridDataType.FloorData)
         {
             behaviour = new FloorRemoveBehaviour();
-            behaviour.Initialize(previewSystem, grid, selectedData, gridData);
+            behaviour.Initialize(previewSystem, objectPlacer, grid, selectedData, gridData);
         }
         else
         {
             behaviour = new DefaultRemoveBehaviour();
-            behaviour.Initialize(previewSystem, grid, selectedData, gridData);
+            behaviour.Initialize(previewSystem, objectPlacer, grid, selectedData, gridData);
         }
 
         if (!behaviour.CanRemove(gridPosition))
@@ -82,13 +82,26 @@ public class RemovingState : IBuildingState
         behaviour.Remove(objectPlacer, gameObjectIndex);
 
         Vector3 cellPosition = grid.CellToWorld(gridPosition);
-        previewSystem.UpdatePosition(cellPosition, CheckIfSelectionIsValid(gridPosition));
+        previewSystem.UpdatePosition(cellPosition, CheckIfCellIsEmpty(gridPosition));
         return true;
     }
     public void UpdateState(Vector3Int gridPosition)
     {
-        bool validity = CheckIfSelectionIsValid(gridPosition);
-        previewSystem.UpdatePosition(grid.CellToWorld(gridPosition), validity);
+        bool cellIsEmpty = CheckIfCellIsEmpty(gridPosition);
+
+        if (cellIsEmpty)
+            return;
+
+        GameObject gameObjectToRemove = GetObjectToRemove(gridPosition);
+        
+        if (behaviour != null)
+        {
+            behaviour.UpdatePreview(gridPosition, gameObjectToRemove);
+        }
+        else
+        {
+            previewSystem.UpdateRemoval(grid.CellToWorld(gridPosition), gameObjectToRemove, cellIsEmpty);           
+        }
     }
 
     public void UpdateResources()
@@ -101,8 +114,21 @@ public class RemovingState : IBuildingState
         previewSystem.StopShowingPreview();
     }
     
-    private bool CheckIfSelectionIsValid(Vector3Int gridPosition)
+    private bool CheckIfCellIsEmpty(Vector3Int gridPosition)
     {
-        return gridData.IsOccupied(gridPosition, Vector2Int.one);
+        return !gridData.IsOccupied(gridPosition, Vector2Int.one);
+    }
+
+    private GameObject GetObjectToRemove(Vector3Int gridPosition)
+    {
+        GameObject gameObjectToRemove;
+
+        GridData selectedData = gridData.GetGridDataFromPos(gridPosition, Vector2Int.one);
+
+        gameObjectIndex = selectedData.GetRepresentationIndex(gridPosition);
+
+        gameObjectToRemove = objectPlacer.GetGameObjectAt(gameObjectIndex);
+
+        return gameObjectToRemove;
     }
 }

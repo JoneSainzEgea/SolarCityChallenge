@@ -117,7 +117,7 @@ public class PreviewSystem : MonoBehaviour
     {
         previewObject.transform.position = new Vector3(position.x, position.y + previewOffset, position.z);
     }
-#endregion
+    #endregion
 
     #region FloorPlacement
 
@@ -218,6 +218,22 @@ public class PreviewSystem : MonoBehaviour
         cellIndicator.SetActive(true);
         PrepareCursor(Vector2Int.one);
         ApplyFeedbackToCursor(false);
+    }
+
+    public void UpdateRemoval (Vector3 position, GameObject gameObjectToRemove, bool validity)
+    {
+        if (gameObjectToRemove != null)
+        {
+            ApplyRemovalFeedback(gameObjectToRemove, validity);
+            ApplyFeedbackToPreview(validity);
+        }
+        MoveCursor(position);
+        ApplyFeedbackToCursor(validity);
+    }
+
+    private void ApplyRemovalFeedback(GameObject gameObjectRemove, bool validity)
+    {
+        
     }
     #endregion
 
