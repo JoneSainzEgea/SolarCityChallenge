@@ -12,10 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5184619d4b1a78146b8715ec1cfea51b, type: 3}
   m_Name: FloorBuildBehaviour
   m_EditorClassIdentifier: 
-  wallPrefabs:
-  - {fileID: 4553453013749246068, guid: d0755535b106c4c46a5030d4dc70ad3b, type: 3}
-  - {fileID: 4553453013749246068, guid: 9ee8d9369f66f3a408a482dd186d34b2, type: 3}
-  - {fileID: 4553453013749246068, guid: 2b835d0a8d0d1a14eadcbdee6fdde0cb, type: 3}
-  - {fileID: 4553453013749246068, guid: 856a6b01279989640bb55d3fbe37c100, type: 3}
-  - {fileID: 4553453013749246068, guid: 7a1ce53c79c523b489b62b4ba851d4c7, type: 3}
+  wallPrefab: {fileID: 4553453013749246068, guid: d0755535b106c4c46a5030d4dc70ad3b, type: 3}
   wallID: 1

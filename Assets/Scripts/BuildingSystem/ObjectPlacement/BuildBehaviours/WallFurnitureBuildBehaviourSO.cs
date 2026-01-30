@@ -29,8 +29,9 @@ public class WallFurnitureBuildBehaviourSO : BuildBehaviourSO
 
         // Has wall and doesn't have wall furniture
         GridData wallData = gridData.GetGridData(GridDataType.WallData);
+        GridData externalWallData = gridData.GetGridData(GridDataType.ExternalWallData);
         GridData wallFurnitureData = gridData.GetGridData(GridDataType.WallFurnitureData);
-        return !wallData.CanPlaceObjectAt(pos, size) && wallFurnitureData.CanPlaceObjectAt(pos, size);
+        return (!wallData.CanPlaceObjectAt(pos, size) || !externalWallData.CanPlaceObjectAt(pos, size)) && wallFurnitureData.CanPlaceObjectAt(pos, size);
     }
 
     public override bool HasMoney(ResourceManagement resourceManagement, int prize)

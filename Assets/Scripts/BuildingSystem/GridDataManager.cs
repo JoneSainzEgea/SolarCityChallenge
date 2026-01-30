@@ -11,17 +11,18 @@
  */
 using UnityEngine;
 
-public enum GridDataType { FloorData, FurnitureData, WallData, WallFurnitureData}
+public enum GridDataType { FloorData, FurnitureData, WallData, WallFurnitureData, ExternalWallData}
 
 public class GridDataManager
 {
-    private GridData floorData, furnitureData, wallData, wallFurnitureData;
+    private GridData floorData, furnitureData, wallData, wallFurnitureData, externalWallData;
     public void InitializeGridData()
     {
         floorData = new();
         furnitureData = new();
         wallData = new();
         wallFurnitureData = new();
+        externalWallData = new();
     }
 
     public GridData GetGridData(GridDataType gridDataType)
@@ -36,6 +37,8 @@ public class GridDataManager
                 return wallData;
             case GridDataType.WallFurnitureData:
                 return wallFurnitureData;
+            case GridDataType.ExternalWallData:
+                return externalWallData;
             default:
                 return furnitureData;
         }
@@ -55,6 +58,10 @@ public class GridDataManager
         else if (wallData.CanPlaceObjectAt(pos, size) == false)
         {
             selectedData = wallData;
+        }
+        else if (externalWallData.CanPlaceObjectAt(pos, size) == false)
+        {
+            selectedData = externalWallData;
         }
         else if (floorData.CanPlaceObjectAt(pos, size) == false)
         {
@@ -77,6 +84,10 @@ public class GridDataManager
         else if (wallData.CanPlaceObjectAt(pos, size) == false)
         {
             selectedData = GridDataType.WallData;
+        }
+        else if (externalWallData.CanPlaceObjectAt(pos, size) == false)
+        {
+            selectedData = GridDataType.ExternalWallData;
         }
         else if (floorData.CanPlaceObjectAt(pos, size) == false)
         {

@@ -52,22 +52,17 @@ public class ObjectPlacer : MonoBehaviour
     #endregion
 
     #region WallPlacement
-    public void WallPositioning(GameObject[] prefabs, Vector3 basePosition, WallType type)
+    public void PlaceWallGroupObject(GameObject prefab, Vector3 position, Grid grid, GridDataManager gridData)
     {
-        if (!WallConfigurations.WallConfigs.TryGetValue(type, out WallConfig config))
+        // TODO: que sean hijos de un objeto concreto para limpieza de jerarquía
+        GameObject newObject = Instantiate(prefab);
+        newObject.transform.position = position;
+        groupedGameObjects[groupIndex].Add(newObject);
+        if (newObject.TryGetComponent<WallAutoTile>(out WallAutoTile autoTile))
         {
-            Debug.LogWarning($"WallType no configurado: {type}");
-            return;
+            autoTile.Initialize(grid, gridData);
         }
-
-        GameObject prefab = prefabs[config.prefabIndex];
-        Vector3 position = basePosition + config.offset;
-        Quaternion rotation = Quaternion.Euler(config.rotation);
-
-        GameObject newWall = Instantiate(prefab, position, rotation);
-        groupedGameObjects[groupIndex].Add(newWall);
     }
-
     #endregion
 
     #region Grouped Objects

@@ -59,6 +59,7 @@ public class FloorRemoveBehaviour : IRemoveBehaviour
         placer.RemoveGroupObjectAt(index);
 
         GridData wallData = gridData.GetGridData(GridDataType.WallData);
+        GridData externalWallData = gridData.GetGridData(GridDataType.ExternalWallData);
         GridData wallFurnitureData = gridData.GetGridData(GridDataType.WallFurnitureData);
 
         foreach (Vector3Int position in floorPositions)
@@ -67,6 +68,12 @@ public class FloorRemoveBehaviour : IRemoveBehaviour
             {
                 int i = wallData.GetGroupRepresentationIndex(position);
                 wallData.RemoveObjectAt(position);
+                placer.RemoveGroupObjectAt(i);
+            }
+            if (externalWallData.IsOccupied(position))
+            {
+                int i = externalWallData.GetGroupRepresentationIndex(position);
+                externalWallData.RemoveObjectAt(position);
                 placer.RemoveGroupObjectAt(i);
             }
             if (wallFurnitureData.IsOccupied(position))

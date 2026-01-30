@@ -1,6 +1,5 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+// 27/01/2026
+// Uso de flags bit a bit para hacer combinaciones
 using UnityEngine;
 using static UnityEngine.UI.GridLayoutGroup;
 
@@ -16,29 +15,50 @@ public enum WallNeighbourMask
 
 public class WallAutoTile : MonoBehaviour
 {
-    [Header("Variants")]
-    [SerializeField] private GameObject singleWall;
-    [SerializeField] private GameObject doubleWall;
-    [SerializeField] private GameObject cornerWall;
-    [SerializeField] private GameObject threeCornerWall;
-    [SerializeField] private GameObject fourCornerWall;
+    [SerializeField] private FloorBuildBehaviourSO floorBuild;
+    private GridDataManager gridData;
+    private Grid grid;
+    private Vector3Int wallCell;
 
+    [Header("Wall Variants")]
+    [SerializeField] private GameObject singleWall; // One wall on one side on the tile
+    [SerializeField] private GameObject doubleWall; // Two walls in one tile, parallel
+    [SerializeField] private GameObject cornerWall; // Two walls in one tile, forming a corner
+    [SerializeField] private GameObject threeCornerWall; // Three walls on one tile
+    [SerializeField] private GameObject fourCornerWall; // Four walls in one tile
 
-    //private void RecalculateWallsAround(Vector3Int cell)
-    //{
-    //    foreach (Vector3Int dir in directions)
-    //    {
-    //        Vector3Int pos = cell + dir;
-
-
-    //        if (wallGrid.HasWall(pos))
-    //            wallGrid.GetWall(pos).Recalculate(pos, floorData);
-    //    }
-    //}
-
-    public void Recalculate(Vector3Int cellPosition, GridData floorData)
+    private void OnEnable()
     {
-        WallNeighbourMask mask = GetMask(cellPosition, floorData);
+        floorBuild.OnFloorPlaced += OnFloorPlaced;
+    }
+
+    private void OnDisable()
+    {
+        floorBuild.OnFloorPlaced -= OnFloorPlaced;
+    }
+
+    public void Initialize(Grid grid, GridDataManager gridData)
+    {
+        this.grid = grid;
+        this.gridData = gridData;
+        wallCell = grid.WorldToCell(transform.position);
+        Recalculate();
+    }
+
+    private void OnFloorPlaced(Vector3Int cellToCheck)
+    {
+        if (cellToCheck == wallCell)
+            Recalculate();
+    }
+
+    public void Recalculate()
+    {
+        GridData floorData = gridData.GetGridData(GridDataType.FloorData);
+        WallNeighbourMask mask = GetMask(wallCell, floorData);
+
+        transform.position = wallCell;
+        transform.rotation = Quaternion.identity;
+
         ApplyVisual(mask);
     }
 
@@ -47,12 +67,10 @@ public class WallAutoTile : MonoBehaviour
     {
         WallNeighbourMask mask = WallNeighbourMask.None;
 
-
         if (floorData.IsOccupied(cell + Vector3Int.forward)) mask |= WallNeighbourMask.North;
         if (floorData.IsOccupied(cell + Vector3Int.back)) mask |= WallNeighbourMask.South;
         if (floorData.IsOccupied(cell + Vector3Int.right)) mask |= WallNeighbourMask.East;
         if (floorData.IsOccupied(cell + Vector3Int.left)) mask |= WallNeighbourMask.West;
-
 
         return mask;
     }
@@ -61,23 +79,17 @@ public class WallAutoTile : MonoBehaviour
     {
         DisableAll();
 
-
         int connections = CountBits(mask);
-
 
         switch (connections)
         {
             case 0:
-                Activate(singleWall);
+                Activate(fourCornerWall);
                 break;
-
-
             case 1:
-                Activate(doubleWall);
-                SetRotationForSingle(mask);
+                Activate(threeCornerWall);
+                SetRotationForThreeCorners(mask);
                 break;
-
-
             case 2:
                 if (IsStraight(mask))
                 {
@@ -90,16 +102,13 @@ public class WallAutoTile : MonoBehaviour
                     SetRotationForCorner(mask);
                 }
                 break;
-
-
             case 3:
-                Activate(threeCornerWall);
-                SetRotationForTJunction(mask);
+                Activate(singleWall);
+                SetRotationForSingle(mask);
                 break;
-
-
             case 4:
-                Activate(fourCornerWall);
+                DisableAll();
+                Debug.Log("No wall");
                 break;
         }
     }
@@ -118,8 +127,6 @@ public class WallAutoTile : MonoBehaviour
     {
         bool vertical = mask.HasFlag(WallNeighbourMask.North) && mask.HasFlag(WallNeighbourMask.South);
         bool horizontal = mask.HasFlag(WallNeighbourMask.East) && mask.HasFlag(WallNeighbourMask.West);
-
-
         return vertical || horizontal;
     }
 
@@ -132,7 +139,6 @@ public class WallAutoTile : MonoBehaviour
         fourCornerWall.SetActive(false);
     }
 
-
     private void Activate(GameObject obj)
     {
         obj.SetActive(true);
@@ -141,23 +147,32 @@ public class WallAutoTile : MonoBehaviour
 
     private void SetRotationForSingle(WallNeighbourMask mask)
     {
-        if (mask.HasFlag(WallNeighbourMask.North))
-            transform.rotation = Quaternion.Euler(0, 0, 0);
-        else if (mask.HasFlag(WallNeighbourMask.East))
+        if (!mask.HasFlag(WallNeighbourMask.North))
+        {
+            transform.position += Vector3.forward;
             transform.rotation = Quaternion.Euler(0, 90, 0);
-        else if (mask.HasFlag(WallNeighbourMask.South))
+        }
+        else if (!mask.HasFlag(WallNeighbourMask.East))
+        {
+            transform.position += Vector3.right + Vector3.forward;
             transform.rotation = Quaternion.Euler(0, 180, 0);
-        else if (mask.HasFlag(WallNeighbourMask.West))
+        }
+        else if (!mask.HasFlag(WallNeighbourMask.South))
+        {
+            transform.position += Vector3.right;
             transform.rotation = Quaternion.Euler(0, 270, 0);
+        }
     }
 
     private void SetRotationForStraight(WallNeighbourMask mask)
     {
-        // Vertical (N-S) = rotación base
         if (mask.HasFlag(WallNeighbourMask.North))
             transform.rotation = Quaternion.identity;
         else
+        {
+            transform.position += Vector3.forward;
             transform.rotation = Quaternion.Euler(0, 90, 0);
+        }
     }
 
     private void SetRotationForCorner(WallNeighbourMask mask)
@@ -165,23 +180,42 @@ public class WallAutoTile : MonoBehaviour
         if (mask.HasFlag(WallNeighbourMask.North) && mask.HasFlag(WallNeighbourMask.East))
             transform.rotation = Quaternion.Euler(0, 0, 0);
         else if (mask.HasFlag(WallNeighbourMask.East) && mask.HasFlag(WallNeighbourMask.South))
+        {
+            transform.position += Vector3.forward;
             transform.rotation = Quaternion.Euler(0, 90, 0);
+        }
         else if (mask.HasFlag(WallNeighbourMask.South) && mask.HasFlag(WallNeighbourMask.West))
+        {
+            transform.position += Vector3.right + Vector3.forward;
             transform.rotation = Quaternion.Euler(0, 180, 0);
+        }
         else
+        {
+            transform.position += Vector3.right;
             transform.rotation = Quaternion.Euler(0, 270, 0);
+        }
     }
 
-    private void SetRotationForTJunction(WallNeighbourMask mask)
+    private void SetRotationForThreeCorners(WallNeighbourMask mask)
     {
-        // Rotamos para que el lado "abierto" mire al lado sin vecino
-        if (!mask.HasFlag(WallNeighbourMask.North))
+        if (mask.HasFlag(WallNeighbourMask.North))
+        {
             transform.rotation = Quaternion.identity;
-        else if (!mask.HasFlag(WallNeighbourMask.East))
-            transform.rotation = Quaternion.Euler(0, 90, 0);
-        else if (!mask.HasFlag(WallNeighbourMask.South))
+        }
+        else if (mask.HasFlag(WallNeighbourMask.South))
+        {
+            transform.position += Vector3.forward + Vector3.right;
             transform.rotation = Quaternion.Euler(0, 180, 0);
-        else
+        }
+        else if (mask.HasFlag(WallNeighbourMask.East))
+        {
+            transform.position += Vector3.forward;
+            transform.rotation = Quaternion.Euler(0, 90, 0);
+        }
+        else if(mask.HasFlag(WallNeighbourMask.West))
+        {
+            transform.position += Vector3.right;
             transform.rotation = Quaternion.Euler(0, 270, 0);
+        }
     }
 }
