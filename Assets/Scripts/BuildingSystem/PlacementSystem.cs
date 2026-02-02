@@ -19,7 +19,9 @@ using UnityEngine;
 public class PlacementSystem : MonoBehaviour
 {
     [SerializeField] private InputManager inputManager;
-    [SerializeField] private Grid grid;
+    [SerializeField] private Grid mainGrid;
+    [SerializeField] private Grid roofGrid;
+    private Grid grid;
 
     [SerializeField] private ObjectsDatabaseSO database;
 
@@ -39,12 +41,15 @@ public class PlacementSystem : MonoBehaviour
 
     [SerializeField] private SoundFeedback soundFeedback;
 
+    [SerializeField] private AutomaticRoofBuilding roofBuilding;
+
     private void Start()
     {
         StopPlacement();
 
         gridDataManager = new();
         gridDataManager.InitializeGridData();
+        grid = mainGrid;
     }
 
     private void Update()
@@ -122,5 +127,12 @@ public class PlacementSystem : MonoBehaviour
         inputManager.OnCancel -= StopPlacement;
         lastDetectedPosition = Vector3Int.zero;
         buildingState = null;
+    }
+
+    public void BuildRoof()
+    {
+        roofBuilding.Initialize(gridDataManager, grid);
+
+        grid = roofGrid;
     }
 }

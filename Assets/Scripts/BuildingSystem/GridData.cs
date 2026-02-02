@@ -90,6 +90,18 @@ public class GridData
         return groupPositions;
     }
 
+    public List<Vector3Int> GetAllPositions()
+    {
+        List<Vector3Int> groupPositions = new List<Vector3Int>();
+
+        foreach (KeyValuePair<Vector3Int, int> pair in dataGroups)
+        {
+            groupPositions.Add(pair.Key);
+        }
+
+        return groupPositions;
+    }
+
     public int GetRepresentationIndex(Vector3Int gridPosition)
     {
         if (placedObjects.ContainsKey(gridPosition) == false)
