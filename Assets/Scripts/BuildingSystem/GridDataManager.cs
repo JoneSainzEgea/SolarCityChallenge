@@ -16,6 +16,7 @@ public enum GridDataType { FloorData, FurnitureData, WallData, WallFurnitureData
 public class GridDataManager
 {
     private GridData floorData, furnitureData, wallData, wallFurnitureData, externalWallData;
+
     public void InitializeGridData()
     {
         floorData = new();

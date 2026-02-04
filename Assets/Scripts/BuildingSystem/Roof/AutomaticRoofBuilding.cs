@@ -1,5 +1,12 @@
-//02/02/2026
-// Jone Sainz Egea
+/* AutomaticRoofBuilding
+ * Jone Sainz Egea
+ * 02/02/2026
+ *
+ * Clase que se encarga de la creación automática del tejado de un suelo específico almacenado
+ * Incluye los métodos: Initialize, CanRemove, Remove, UpdateResources y UpdatePreview
+ * 
+ * v1 -21/01/2026- Initialize, CanRemove, Remove, UpdateResources, UpdatePreview.
+ */
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,7 +22,8 @@ public class AutomaticRoofBuilding : MonoBehaviour
 
     List<Vector3Int> floorPositions;
 
-    [SerializeField] private GameObject roof;
+    [SerializeField] private GameObject roofVisual;
+    [SerializeField] private GameObject roofGrid;
 
     public void Initialize(GridDataManager gridDataManager, Grid mainGrid)
     {
@@ -58,14 +66,17 @@ public class AutomaticRoofBuilding : MonoBehaviour
             Vector3 worldSize = worldMax - worldMin;
             Vector3 worldCenter = worldMin + worldSize / 2f;
 
-            roof.transform.position = worldCenter;
-            roof.transform.position += Vector3.up;
-            roof.transform.localScale = worldSize;
+            roofVisual.transform.position = new Vector3(worldCenter.x, 2f, worldCenter.z);
+            roofVisual.transform.localScale = worldSize;
+
+            roofVisual.SetActive(true);            
+
+            roofGrid.transform.position = new Vector3(worldCenter.x, 2f, worldCenter.z);
         }
     }
 
     private void MoveCamera()
     {
-        // TODO: Move camera to top level
+        // TODO: mover la cámara para que enfoque el nivel superior
     }
 }

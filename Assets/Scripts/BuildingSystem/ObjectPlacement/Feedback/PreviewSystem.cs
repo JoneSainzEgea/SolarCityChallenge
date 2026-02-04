@@ -33,7 +33,6 @@ public class PreviewSystem : MonoBehaviour
 
     // Floor preview
     private GameObject floorPrefab;
-    private Vector3Int rectangleInitialPos;
 
     // Connection
     private readonly List<Connector> connectors = new();
@@ -123,7 +122,6 @@ public class PreviewSystem : MonoBehaviour
 
     public void StartShowingFloorPlacementPreview(GameObject prefab, Vector3Int initialPos)
     {
-        rectangleInitialPos = initialPos;
         floorPrefab = prefab;
 
         previewObject = Instantiate(floorPrefab);
@@ -207,7 +205,6 @@ public class PreviewSystem : MonoBehaviour
 
             previewObjects.Clear();
         }
-        rectangleInitialPos = Vector3Int.zero;
     }
 
     #endregion
