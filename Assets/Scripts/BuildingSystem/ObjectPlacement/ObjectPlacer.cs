@@ -22,7 +22,7 @@ public class ObjectPlacer : MonoBehaviour
     private List<GameObject> placedGameObjects = new();
     private List<List<GameObject>> groupedGameObjects = new();
     public bool isConnecting = false;
-    private BuildingComponent component1, component2;
+    private SolarComponent component1, component2;
     private int groupIndex = -1;
 
     #region Object Placement and Removal
@@ -32,7 +32,7 @@ public class ObjectPlacer : MonoBehaviour
         GameObject newObject = Instantiate(prefab);
         newObject.transform.position = position;
 
-        BuildingComponent component = newObject.GetComponentInChildren<BuildingComponent>();
+        SolarComponent component = newObject.GetComponentInChildren<SolarComponent>();
         if (component != null)
             component.OnPlacement(energyProduction, resManager);
         //else
@@ -113,7 +113,7 @@ public class ObjectPlacer : MonoBehaviour
         if (placedGameObjects.Count <= gameObjectIndex || placedGameObjects[gameObjectIndex] == null)
             return;
 
-        component1 = placedGameObjects[gameObjectIndex].GetComponentInChildren<BuildingComponent>();
+        component1 = placedGameObjects[gameObjectIndex].GetComponentInChildren<SolarComponent>();
         if (component1 == null)
             return;
 
@@ -123,18 +123,17 @@ public class ObjectPlacer : MonoBehaviour
     public void StopConnectingAt(int gameObjectIndex)
     {
         Debug.Log("Stops connecting");
+        isConnecting = false;
 
         if (placedGameObjects.Count <= gameObjectIndex || placedGameObjects[gameObjectIndex] == null)
             return;
 
-        component2 = placedGameObjects[gameObjectIndex].GetComponentInChildren<BuildingComponent>();
+        component2 = placedGameObjects[gameObjectIndex].GetComponentInChildren<SolarComponent>();
         if (component2 == null)
             return;
 
         component1.OnConnection(component2);
         component2.OnConnection(component1);
-
-        isConnecting = false;
     }
     #endregion
 }

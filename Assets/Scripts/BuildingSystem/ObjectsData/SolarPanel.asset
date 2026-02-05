@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9ec2817b4dd356c478c5ee18d2a15526, type: 3}
-  m_Name: 1x1Object
+  m_Name: SolarPanel
   m_EditorClassIdentifier: Assembly-CSharp::ObjectData
   <Name>k__BackingField: 1x1
   <ID>k__BackingField: 4
@@ -18,4 +18,4 @@ MonoBehaviour:
   <EnergyProduction>k__BackingField: 10
   <Size>k__BackingField: {x: 1, y: 1}
   <Prefab>k__BackingField: {fileID: 6878538599528186925, guid: 811a241ed4832b94b96e9e3dbcc177b1, type: 3}
-  <BuildBehaviour>k__BackingField: {fileID: 11400000, guid: de1908b9c6372ce4c920ff59a96f9f2b, type: 2}
+  <BuildBehaviour>k__BackingField: {fileID: 11400000, guid: 548369a634a65194eb31c5180b51daf9, type: 2}

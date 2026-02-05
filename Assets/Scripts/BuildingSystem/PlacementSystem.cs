@@ -114,7 +114,6 @@ public class PlacementSystem : MonoBehaviour
         }
         Vector3 mousePos = inputManager.GetSelectedMapPosition();
         Vector3Int gridPosition = grid.WorldToCell(mousePos);
-        Debug.Log($"Clicked on {mousePos}, gridPos is {gridPosition} and grid is on {grid.transform.position}");
 
         if (buildingState.OnAction(gridPosition))
             buildingState.UpdateResources();

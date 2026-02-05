@@ -1,4 +1,4 @@
-/* BuildingComponent
+/* SolarComponent
  * Jone Sainz Egea
  * 10/12/2025
  * 
@@ -10,7 +10,7 @@
 
 using UnityEngine;
 
-public abstract class BuildingComponent : MonoBehaviour
+public abstract class SolarComponent : MonoBehaviour
 {
     public ComponentState componentState;
     public float energyProduction;
@@ -24,7 +24,7 @@ public abstract class BuildingComponent : MonoBehaviour
         componentState.EnterState();
     }
 
-    public virtual void OnConnection(BuildingComponent connectedComponent)
+    public virtual void OnConnection(SolarComponent connectedComponent)
     {
         if (CheckDependencies(connectedComponent))
         {
@@ -34,7 +34,7 @@ public abstract class BuildingComponent : MonoBehaviour
         }
     }
 
-    public abstract bool CheckDependencies(BuildingComponent connectedComponent);
+    public abstract bool CheckDependencies(SolarComponent connectedComponent);
 
     //private void Update()
     //{
