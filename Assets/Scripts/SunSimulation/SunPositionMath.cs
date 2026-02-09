@@ -117,11 +117,8 @@ public class SunPositionMath : MonoBehaviour
         RotateDirectionalLight(sun);
     }
 
-    /*!
-    * \brief Corrects an angle.
-    *
-    * \param angleInRadians An angle expressed in radians.
-    * \return An angle in the range 0 to 2*PI.
+    /*
+    * Corrects an angle returning an angle in the range 0 to 2*PI.
     */
     private static double CorrectAngle(double angleInRadians)
     {
@@ -142,7 +139,7 @@ public class SunPositionMath : MonoBehaviour
 
     private void RotateDirectionalLight(GameObject sun)
     {
-        float sphereOffset = 50;
+        float sphereOffset = 30;
         sun.transform.eulerAngles = new Vector3((float)(altitude * Rad2Deg), (float)(azimuth * Rad2Deg), 0);
         sun.transform.position = new Vector3((float)(sphereOffset * Math.Cos(azimuth)), (float)(sphereOffset * Math.Sin(altitude)), (float)(sphereOffset * Math.Sin(azimuth)));
         transform.position = sun.transform.position;
