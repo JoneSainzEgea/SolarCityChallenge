@@ -22,16 +22,20 @@ public class Connector
 
         Line.positionCount = 2;
         Line.material = new Material(Shader.Find("Sprites/Default"));
+        Line.startColor = Color.red;
+        Line.endColor = Color.red;
         Line.startWidth = 0.1f;
         Line.endWidth = 0.1f;
         Line.useWorldSpace = true;
 
         Line.enabled = true;
+        pos1 += Vector3.up;
         Line.SetPosition(0, pos1);
     }
 
     public void Update(Vector3 pos2)
     {
+        pos2 += Vector3.up;
         Line.SetPosition(1, pos2);
     }
 

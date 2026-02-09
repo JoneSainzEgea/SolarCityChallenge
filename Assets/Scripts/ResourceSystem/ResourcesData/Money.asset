@@ -15,5 +15,5 @@ MonoBehaviour:
   <Name>k__BackingField: Money
   <ID>k__BackingField: 1
   <ResourceType>k__BackingField: 0
-  <InitialAmount>k__BackingField: 500
+  <InitialAmount>k__BackingField: 1000
   <Sprite>k__BackingField: {fileID: 0}

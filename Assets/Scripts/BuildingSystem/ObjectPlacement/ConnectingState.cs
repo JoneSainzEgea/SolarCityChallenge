@@ -7,6 +7,7 @@
  * Actualiza el estado de los componentes.
  * 
  * v1 -11/12/2025- 
+ * v2 -20/01/2026- introducción de GridDataManager
  * 
  * TODO: añadir previsualización de la conexión.
  */
@@ -44,15 +45,15 @@ public class ConnectingState : IBuildingState
 
     public bool OnAction(Vector3Int gridPosition)
     {
-        GridData selectedData = gridData.GetGridDataType(gridPosition, Vector2Int.one);
-
-        if (selectedData == null)
+        if (gridData.GetGridDataType(gridPosition, Vector2Int.one) != GridDataType.SolarComponentData)
         {
             soundFeedback.PlaySound(SoundType.WrongPlacement);
             return false;
         }
         else
         {
+            GridData selectedData = gridData.GetGridDataFromPos(gridPosition, Vector2Int.one);
+
             Vector3 cellPosition = grid.CellToWorld(gridPosition);
 
             gameObjectIndex = selectedData.GetRepresentationIndex(gridPosition);

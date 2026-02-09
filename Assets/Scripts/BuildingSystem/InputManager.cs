@@ -18,7 +18,8 @@ public class InputManager : MonoBehaviour
     [SerializeField] private Camera sceneCamera;
     private Vector3 lastPosition;
     [SerializeField] private LayerMask placementLayerMask;
-    public event Action OnMousePressed, OnMouseReleased, OnCancel, OnUndo;
+    public event Action OnMousePressed, OnCancel;
+    //public event Action OnMouseReleased, OnUndo;
     //public event Action<int> OnRotate;
     //public event Action<bool> OnToggleDelete;
 

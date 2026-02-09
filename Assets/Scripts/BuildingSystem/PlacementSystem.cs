@@ -6,10 +6,11 @@
  * Recibe toda la información necesaria para ello: input, grid y su visualización, objetos, tipos de objetos y su previsualización, sonidos.
  * Desde este script se gestiona el comienzo y fin de la construcción y demolición, y los efectos sobre los recursos.
  * 
- * Inspirado en el código de: Sunny Valley Studio, Grid Placement System
- * v1 -03/12/2025- construcción y demolición utilizando distintos tipos de objetos
- * v2 -09/12/2025- añadido de conexión con ResourceManagement e implementación de UpdateResources
- * v3 -11/12/2025- inclusión del sistema de conexión de componentes
+ * Inspirado en el código de: Sunny Valley Studio, Grid Placement System.
+ * v1 -03/12/2025- construcción y demolición utilizando distintos tipos de objetos.
+ * v2 -09/12/2025- añadido de conexión con ResourceManagement e implementación de UpdateResources.
+ * v3 -11/12/2025- inclusión del sistema de conexión de componentes.
+ * v4 -04/02/2025- añadido del grid del tejado.
  * 
  * TODO: implementar estado de mover
  */
@@ -19,32 +20,40 @@ using UnityEngine;
 public class PlacementSystem : MonoBehaviour
 {
     [SerializeField] private InputManager inputManager;
-    [SerializeField] private Grid grid;
 
-    [SerializeField] private ObjectsDatabaseSO database;
+    [SerializeField] private Grid mainGrid;
+    [SerializeField] private Grid roofGrid;
+    private Grid grid;
 
-    [SerializeField] private GameObject gridVisualization;
 
-    private GridDataManager gridDataManager;    
+    [SerializeField] private GameObject mainGridVisualization;
+    [SerializeField] private GameObject roofGridVisualization;
+    private GameObject gridVisualization;
+
+    private GridDataManager gridDataManager, mainGridDataManager, roofGridDataManager;    
 
     [SerializeField] private PreviewSystem preview;
-
+    [SerializeField] private ObjectsDatabaseSO database;
     [SerializeField] private ResourceManagement resourceManagement;
+    [SerializeField] private ObjectPlacer objectPlacer;
+    [SerializeField] private SoundFeedback soundFeedback;
+    [SerializeField] private AutomaticRoofBuilding roofBuilding;
 
     private Vector3Int lastDetectedPosition = Vector3Int.zero;
 
-    [SerializeField] private ObjectPlacer objectPlacer;
-
     IBuildingState buildingState;
-
-    [SerializeField] private SoundFeedback soundFeedback;
 
     private void Start()
     {
         StopPlacement();
 
-        gridDataManager = new();
-        gridDataManager.InitializeGridData();
+        mainGridDataManager = new();
+        mainGridDataManager.InitializeGridData();
+
+        gridDataManager = mainGridDataManager;
+
+        grid = mainGrid;
+        gridVisualization = mainGridVisualization;
     }
 
     private void Update()
@@ -59,7 +68,6 @@ public class PlacementSystem : MonoBehaviour
             buildingState.UpdateState(gridPosition);
             lastDetectedPosition = gridPosition;
         }
-        
     }
 
     public void StartPlacement(int ID)
@@ -122,5 +130,23 @@ public class PlacementSystem : MonoBehaviour
         inputManager.OnCancel -= StopPlacement;
         lastDetectedPosition = Vector3Int.zero;
         buildingState = null;
+    }
+
+    public void BuildRoof()
+    {
+        StopPlacement();
+        
+        roofBuilding.Initialize(gridDataManager, grid);
+
+        if(roofGridDataManager == null)
+        {
+            roofGridDataManager = new();
+            roofGridDataManager.InitializeGridData();
+        }
+
+        gridDataManager = roofGridDataManager;
+
+        grid = roofGrid;
+        gridVisualization = roofGridVisualization;
     }
 }

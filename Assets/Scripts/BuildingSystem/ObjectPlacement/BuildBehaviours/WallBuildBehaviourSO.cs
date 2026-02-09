@@ -2,11 +2,35 @@
  * Jone Sainz Egea
  * 19/01/2026
  *
- * ScriptableObject que define
+ * ScriptableObject que define el caso específico de construcción de paredes. Hereda de BuildBehaviourSO.
  * 
  * v1 -19/01/2026- 
  */
+using System.Drawing;
 using UnityEngine;
+
+public enum WallType
+{
+    Left,
+    Right,
+    Bottom,
+    Top,
+
+    CornerBL,
+    CornerTL,
+    CornerBR,
+    CornerTR,
+
+    Vertical,
+    VerticalCornerStart,
+    VerticalCornerEnd,
+
+    Horizontal,
+    HorizontalCornerStart,
+    HorizontalCornerEnd,
+
+    Single
+}
 
 [CreateAssetMenu(menuName = "Building/Behaviours/Wall")]
 public class WallBuildBehaviourSO : BuildBehaviourSO
@@ -17,18 +41,22 @@ public class WallBuildBehaviourSO : BuildBehaviourSO
     private Grid grid;
     private GridDataManager gridData;
     private ResourceManagement resourceManagement;
-    public override void StartPreview(PreviewSystem preview, GameObject prefab, Vector2Int size)
+    private PreviewSystem preview;
+    private int prize;
+    public override void StartPreview(PreviewSystem preview, GameObject prefab, Vector2Int size, Grid grid, GridDataManager gridData)
     {
+        this.preview = preview;
         this.prefab = prefab;
         this.size = size;
+        this.grid = grid;
+        this.gridData = gridData;
+
         preview.StartShowingPlacementPreview(prefab, size);
     }
 
-    public override bool CanPlace(Vector3Int pos, Grid grid, GridDataManager gridData)
+    public override bool CanPlace(Vector3Int pos)
     {
         this.pos = pos;
-        this.grid = grid;
-        this.gridData = gridData;
 
         // Has floor and doesn't have wall
         GridData floorData = gridData.GetGridData(GridDataType.FloorData);
@@ -40,6 +68,7 @@ public class WallBuildBehaviourSO : BuildBehaviourSO
     {
         // TODO: change calc for amount of wall
         this.resourceManagement = resourceManagement;
+        this.prize = prize;
         return (resourceManagement.GetResourceAmount(ResourceType.Money) >= prize);
     }
 
@@ -49,5 +78,15 @@ public class WallBuildBehaviourSO : BuildBehaviourSO
 
         GridData wallData = gridData.GetGridData(GridDataType.WallData);
         wallData.AddObjectAt(pos, size, ID, index);
+    }
+
+    public override void RemoveResources()
+    {
+        resourceManagement.RemoveResource(ResourceType.Money, prize);
+    }
+
+    public override void UpdatePreview(Vector3Int gridPosition)
+    {
+        preview.UpdatePosition(grid.CellToWorld(gridPosition), CanPlace(gridPosition));
     }
 }

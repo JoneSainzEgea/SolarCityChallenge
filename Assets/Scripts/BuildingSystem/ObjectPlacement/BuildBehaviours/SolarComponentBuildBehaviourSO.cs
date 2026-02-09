@@ -13,8 +13,8 @@
 using System.Drawing;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Building/Behaviours/Default")]
-public class DefaultBuildBehaviourSO : BuildBehaviourSO
+[CreateAssetMenu(menuName = "Building/Behaviours/Solar Component")]
+public class SolarComponentBuildBehaviourSO : BuildBehaviourSO
 {
     private Vector2Int size;
     private Vector3Int pos;
@@ -39,10 +39,11 @@ public class DefaultBuildBehaviourSO : BuildBehaviourSO
     {
         this.pos = pos;
 
-        // Has floor and doesn't have furniture
+        // Has floor and doesn't have furniture or solar
         GridData floorData = gridData.GetGridData(GridDataType.FloorData);
         GridData furnitureData = gridData.GetGridData(GridDataType.FurnitureData);
-        return !floorData.CanPlaceObjectAt(pos, size) && furnitureData.CanPlaceObjectAt(pos, size);
+        GridData solarComponentData = gridData.GetGridData(GridDataType.SolarComponentData);
+        return !floorData.CanPlaceObjectAt(pos, size) && furnitureData.CanPlaceObjectAt(pos, size) && solarComponentData.CanPlaceObjectAt(pos, size);
     }
 
     public override bool HasMoney(ResourceManagement resourceManagement, int prize)
@@ -57,8 +58,8 @@ public class DefaultBuildBehaviourSO : BuildBehaviourSO
     {
         int index = placer.PlaceObject(prefab,grid.CellToWorld(pos), energyProduction, resourceManagement);
 
-        GridData furnitureData = gridData.GetGridData(GridDataType.FurnitureData);
-        furnitureData.AddObjectAt(pos,size, ID, index);
+        GridData solarComponentData = gridData.GetGridData(GridDataType.SolarComponentData);
+        solarComponentData.AddObjectAt(pos,size, ID, index);
     }
 
     public override void RemoveResources()

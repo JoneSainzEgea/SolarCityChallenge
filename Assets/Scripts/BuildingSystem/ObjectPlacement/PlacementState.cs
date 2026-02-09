@@ -10,7 +10,7 @@
  * Inspirado en el código de: Sunny Valley Studio, Grid Placement System
  * v1 -03/12/2025- Identifica el objeto, lo previsualiza, comprueba que se pueda colocar, llama a colocarlo y almacena la información de su posición, tipo de objeto y tamaño.
  * v2 -09/12/2025- Comprueba que haya dinero suficiente, actualiza valores de dinero y energía.
- * v3 -20/01/2025- Cambio de funcionamiento implementando BuildBehaviourSO
+ * v3 -20/01/2025- Cambio de funcionamiento implementando BuildBehaviourSO y GridDataManager
  */
 
 using UnityEngine;
@@ -47,7 +47,7 @@ public class PlacementState : IBuildingState
         if (selectedObjectIndex > -1)
         {
             behaviour = database.objectsData[selectedObjectIndex].BuildBehaviour;
-            behaviour.StartPreview(previewSystem, database.objectsData[selectedObjectIndex].Prefab, database.objectsData[selectedObjectIndex].Size);
+            behaviour.StartPreview(previewSystem, database.objectsData[selectedObjectIndex].Prefab, database.objectsData[selectedObjectIndex].Size, grid, gridData);
         }
         else
             throw new System.Exception($"No object with ID {ID}");
@@ -61,7 +61,7 @@ public class PlacementState : IBuildingState
             soundFeedback.PlaySound(SoundType.WrongPlacement);
             return false;
         }
-        if (!behaviour.CanPlace(gridPosition, grid, gridData))
+        if (!behaviour.CanPlace(gridPosition))
         {
             soundFeedback.PlaySound(SoundType.WrongPlacement);
             return false;
@@ -69,19 +69,17 @@ public class PlacementState : IBuildingState
         soundFeedback.PlaySound(SoundType.Place);
         behaviour.Place(objectPlacer, ID, database.objectsData[selectedObjectIndex].EnergyProduction);
 
-        previewSystem.UpdatePosition(grid.CellToWorld(gridPosition), false);
+        behaviour.UpdatePreview(gridPosition);
         return true;
     }
 
     public void UpdateState(Vector3Int gridPosition)
     {
-        bool placementValidity = behaviour.CanPlace(gridPosition, grid, gridData);
-
-        previewSystem.UpdatePosition(grid.CellToWorld(gridPosition), placementValidity);
+        behaviour.UpdatePreview(gridPosition);
     }
     public void UpdateResources()
     {
-        resourceManagement.RemoveResource(ResourceType.Money, database.objectsData[selectedObjectIndex].Prize);
+        behaviour.RemoveResources();
     }
 
     public void EndState()
