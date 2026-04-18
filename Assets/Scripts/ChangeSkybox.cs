@@ -1,5 +1,7 @@
+// Jone Sainz Egea
+// 17/04/2026
+
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ChangeSkybox : MonoBehaviour
