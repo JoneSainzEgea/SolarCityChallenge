@@ -82,6 +82,18 @@ public class PlacementSystem : MonoBehaviour
         inputManager.OnCancel += StopPlacement;
     }
 
+    public void StartRotating()
+    {
+        StopPlacement();
+        gridVisualization.SetActive(true);
+
+        buildingState = new RotatingState(grid, preview, gridDataManager, objectPlacer, soundFeedback);
+        buildingState.EnterState();
+
+        inputManager.OnMousePressed += PlaceStructure; // PlaceStructure llamará a buildingState.OnAction
+        inputManager.OnCancel += StopPlacement;
+    }
+
     public void StartRemoving()
     {
         StopPlacement();
