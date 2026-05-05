@@ -7,7 +7,7 @@ public class CameraController : MonoBehaviour
     [Header("Target")]
     [SerializeField] private Transform target;
 
-    [Header("Rotación")]
+    [Header("Rotation")]
     [SerializeField] private float rotationSpeed = 3f;
     [SerializeField] private float minPitch = 5f;   // límite inferior (cúpula)
     [SerializeField] private float maxPitch = 80f;   // límite superior
@@ -17,13 +17,18 @@ public class CameraController : MonoBehaviour
     [SerializeField] private float minDistance = 5f;
     [SerializeField] private float maxDistance = 30f;
 
-    [Header("Teclado")]
+    [Header("Keyboard")]
     [SerializeField] private float keyboardRotationSpeed = 60f;
     [SerializeField] private float keyboardZoomSpeed = 20f;
 
+    [Header("Terrain Interaction")]
+    [SerializeField] private float minCamTerrainHeight = 0.5f;
+
+    private float correctedDistance;
+
     private float yaw = 0f;
     private float pitch = 30f;
-    private float distance = 12f;
+    private float distance = 15f;
 
     void Start()
     {
@@ -38,10 +43,14 @@ public class CameraController : MonoBehaviour
         HandleKeyboardInput();
         HandleZoom();
 
-        UpdateCameraPosition();
+        correctedDistance = distance;
+
+        AdjustCameraToTerrain(ref correctedDistance);
+
+        UpdateCameraPosition(correctedDistance);
     }
 
-    void HandleMouseInput()
+    private void HandleMouseInput()
     {
         if (Input.GetMouseButton(0) || Input.GetMouseButton(1))
         {
@@ -57,7 +66,7 @@ public class CameraController : MonoBehaviour
         }
     }
 
-    void HandleKeyboardInput()
+    private void HandleKeyboardInput()
     {
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
@@ -76,7 +85,7 @@ public class CameraController : MonoBehaviour
         distance = Mathf.Clamp(distance, minDistance, maxDistance);
     }
 
-    void HandleZoom()
+    private void HandleZoom()
     {
         float scroll = Input.GetAxis("Mouse ScrollWheel");
 
@@ -87,13 +96,31 @@ public class CameraController : MonoBehaviour
         }
     }
 
-    void UpdateCameraPosition()
+    private void UpdateCameraPosition(float currentDistance)
     {
         Quaternion rotation = Quaternion.Euler(pitch, yaw, 0);
 
         Vector3 direction = rotation * Vector3.forward;
 
-        transform.position = target.position - direction * distance;
+        transform.position = target.position - direction * currentDistance;
         transform.LookAt(target.position);
+    }
+
+    private void AdjustCameraToTerrain(ref float correctedDistance)
+    {
+        Quaternion rotation = Quaternion.Euler(pitch, yaw, 0);
+        Vector3 direction = rotation * Vector3.forward;
+
+        Vector3 desiredPosition = target.position - direction * correctedDistance;
+
+        RaycastHit hit;
+
+        if (Physics.SphereCast(target.position, 0.5f, -direction, out hit, correctedDistance))
+        {
+            if (hit.collider.CompareTag("Terrain"))
+            {
+                correctedDistance = hit.distance - minCamTerrainHeight;
+            }
+        }
     }
 }

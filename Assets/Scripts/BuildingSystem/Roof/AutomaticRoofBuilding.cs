@@ -66,12 +66,12 @@ public class AutomaticRoofBuilding : MonoBehaviour
             Vector3 worldSize = worldMax - worldMin;
             Vector3 worldCenter = worldMin + worldSize / 2f;
 
-            roofVisual.transform.position = new Vector3(worldCenter.x, 2.9f, worldCenter.z);
+            roofVisual.transform.position = new Vector3(worldCenter.x, 1.9f, worldCenter.z);
             roofVisual.transform.localScale = worldSize;
 
             roofVisual.SetActive(true);            
 
-            roofGrid.transform.position = new Vector3(worldCenter.x, 2.9f, worldCenter.z);
+            roofGrid.transform.position = new Vector3(worldCenter.x, 1.9f, worldCenter.z);
         }
     }
 
