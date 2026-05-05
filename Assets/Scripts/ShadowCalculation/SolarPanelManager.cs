@@ -15,7 +15,7 @@ public class SolarPanelManager : MonoBehaviour
 
     private List<SolarModule> modules = new List<SolarModule>();
 
-    private bool checkShadows = false;
+    public bool checkShadows = false;
 
     void Start()
     {
@@ -31,17 +31,7 @@ public class SolarPanelManager : MonoBehaviour
     {
         if (checkShadows)
             CheckShadows();
-    }
-
-    public void StartCheckingShadows()
-    {
-        checkShadows = true;
-    }
-
-    public void StopCheckingShadows()
-    {
-        checkShadows = false;
-    }
+    }   
 
     public float GetSolarPanelPercentage()
     {
@@ -58,7 +48,7 @@ public class SolarPanelManager : MonoBehaviour
                 shadowedCount++;
         }
 
-        float percentage = ((float)shadowedCount / modules.Count) * 100;
+        float percentage = (float)shadowedCount / modules.Count;
 
         return percentage;
     }
