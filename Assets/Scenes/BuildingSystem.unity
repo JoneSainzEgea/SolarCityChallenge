@@ -4804,6 +4804,7 @@ Transform:
   m_Children:
   - {fileID: 1186527148}
   - {fileID: 1067062243}
+  - {fileID: 1001928245}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &777621813
@@ -6268,6 +6269,37 @@ Transform:
   - {fileID: 276929140}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1001928244
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1001928245}
+  m_Layer: 0
+  m_Name: BuildingComponents
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1001928245
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1001928244}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 777078163}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1010586427
 GameObject:
   m_ObjectHideFlags: 0
@@ -6938,6 +6970,7 @@ MonoBehaviour:
   roofGrid: {fileID: 1434319518}
   mainGridVisualization: {fileID: 780920145}
   roofGridVisualization: {fileID: 1756220228}
+  buildingParent: {fileID: 1001928244}
   preview: {fileID: 1290296257}
   database: {fileID: 11400000, guid: 101af2cca768c474982792ea67271930, type: 2}
   resourceManagement: {fileID: 217777175}
