@@ -43,6 +43,11 @@ public class PlacementState : IBuildingState
 
     public void EnterState()
     {
+        if (database == null)
+            Debug.LogWarning("1");
+        if (database.objectsData == null)
+            Debug.LogWarning("2");
+
         selectedObjectIndex = database.objectsData.FindIndex(data => data.ID == ID);
         if (selectedObjectIndex > -1)
         {
