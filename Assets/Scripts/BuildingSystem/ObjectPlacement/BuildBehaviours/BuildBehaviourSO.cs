@@ -12,7 +12,9 @@ using UnityEngine;
 
 public abstract class BuildBehaviourSO : ScriptableObject
 {
-    public abstract void StartPreview(PreviewSystem preview, GameObject prefab, Vector2Int size, Grid grid, GridDataManager gridData);
+    public GameObject placementParent;
+    
+    public abstract void StartPreview(PreviewSystem preview, GameObject prefab, GameObject parent, Vector2Int size, Grid grid, GridDataManager gridData);
 
     public abstract bool CanPlace(Vector3Int gridPosition);
 

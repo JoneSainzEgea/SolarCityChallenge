@@ -29,7 +29,7 @@ public class InputManager : MonoBehaviour
         mousePos.z = sceneCamera.nearClipPlane;
         Ray ray = sceneCamera.ScreenPointToRay(mousePos);
         RaycastHit hit;
-        Debug.DrawRay(ray.origin, ray.direction * 100, Color.red);
+
         if(Physics.Raycast(ray, out hit, 100, placementLayerMask))
             lastPosition = hit.point;
 
@@ -46,7 +46,7 @@ public class InputManager : MonoBehaviour
         {
             OnMousePressed?.Invoke();
         }
-        
+
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             OnCancel?.Invoke();
