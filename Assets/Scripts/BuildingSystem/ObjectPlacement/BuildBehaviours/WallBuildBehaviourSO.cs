@@ -43,10 +43,11 @@ public class WallBuildBehaviourSO : BuildBehaviourSO
     private ResourceManagement resourceManagement;
     private PreviewSystem preview;
     private int prize;
-    public override void StartPreview(PreviewSystem preview, GameObject prefab, Vector2Int size, Grid grid, GridDataManager gridData)
+    public override void StartPreview(PreviewSystem preview, GameObject prefab, GameObject parent, Vector2Int size, Grid grid, GridDataManager gridData)
     {
         this.preview = preview;
         this.prefab = prefab;
+        placementParent = parent;
         this.size = size;
         this.grid = grid;
         this.gridData = gridData;
@@ -74,7 +75,7 @@ public class WallBuildBehaviourSO : BuildBehaviourSO
 
     public override void Place(ObjectPlacer placer, int ID, int energyProduction)
     {
-        int index = placer.PlaceObject(prefab, grid.CellToWorld(pos), energyProduction, resourceManagement);
+        int index = placer.PlaceObject(prefab, placementParent, grid.CellToWorld(pos), energyProduction, resourceManagement);
 
         GridData wallData = gridData.GetGridData(GridDataType.WallData);
         wallData.AddObjectAt(pos, size, ID, index);

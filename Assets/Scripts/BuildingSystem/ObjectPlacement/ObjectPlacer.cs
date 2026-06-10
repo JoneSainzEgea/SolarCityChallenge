@@ -10,15 +10,16 @@
  * v3 -11/12/2025- conecta componentes.
  * v4 -21/01/2026- crea y elimina grupos de objetos.
  * v5 -30/01/2026- GetGameObjectAt añadido para la previsualización del removing state.
- * 
- * TODO: que sean hijos de un objeto concreto para limpieza de jerarquía
+ * v6 -05/05/2026- todos los objetos instanciados son hijos de un padre común para limpieza de jerarquía.
  */
 
 using System.Collections.Generic;
+//using UnityEditor.Animations;
 using UnityEngine;
 
 public class ObjectPlacer : MonoBehaviour
 {
+    private GameObject parent;
     private List<GameObject> placedGameObjects = new();
     private List<List<GameObject>> groupedGameObjects = new();
     public bool isConnecting = false;
@@ -26,10 +27,9 @@ public class ObjectPlacer : MonoBehaviour
     private int groupIndex = -1;
 
     #region Object Placement and Removal
-    public int PlaceObject(GameObject prefab, Vector3 position, float energyProduction, ResourceManagement resManager)
+    public int PlaceObject(GameObject prefab, GameObject parent, Vector3 position, float energyProduction, ResourceManagement resManager)
     {
-        // TODO: que sean hijos de un objeto concreto para limpieza de jerarquía
-        GameObject newObject = Instantiate(prefab);
+        GameObject newObject = Instantiate(prefab, parent.transform);
         newObject.transform.position = position;
 
         SolarComponent component = newObject.GetComponentInChildren<SolarComponent>();
@@ -63,10 +63,9 @@ public class ObjectPlacer : MonoBehaviour
     #endregion
 
     #region WallPlacement
-    public void PlaceWallGroupObject(GameObject prefab, Vector3 position, Grid grid, GridDataManager gridData)
+    public void PlaceWallGroupObject(GameObject prefab, GameObject parent, Vector3 position, Grid grid, GridDataManager gridData)
     {
-        // TODO: que sean hijos de un objeto concreto para limpieza de jerarquía
-        GameObject newObject = Instantiate(prefab);
+        GameObject newObject = Instantiate(prefab, parent.transform);
         newObject.transform.position = position;
         groupedGameObjects[groupIndex].Add(newObject);
         if (newObject.TryGetComponent<WallAutoTile>(out WallAutoTile autoTile))
@@ -84,10 +83,9 @@ public class ObjectPlacer : MonoBehaviour
         return groupIndex;
     }
 
-    public void PlaceGroupObject(GameObject prefab, Vector3 position)
+    public void PlaceGroupObject(GameObject prefab, GameObject parent, Vector3 position)
     {
-        // TODO: que sean hijos de un objeto concreto para limpieza de jerarquía
-        GameObject newObject = Instantiate(prefab);
+        GameObject newObject = Instantiate(prefab, parent.transform);
         newObject.transform.position = position;
         groupedGameObjects[groupIndex].Add(newObject);
     }

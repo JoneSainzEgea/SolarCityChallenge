@@ -30,6 +30,11 @@ public class TutorialTrigger : MonoBehaviour
         }
     }
 
+    public void TriggerTutorial(string tutorialEventName)
+    {
+        EventsManager.TriggerNormalEvent(tutorialEventName);
+    }
+
 
     private void OnTriggeredByAction(Tutorial tutorial)
     {

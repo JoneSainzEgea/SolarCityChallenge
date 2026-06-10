@@ -8,7 +8,6 @@ public class TutorialManager : MonoBehaviour
 
     [SerializeField] private GameObject tutorialMessagePrefab;
     [SerializeField] private Transform canvasParent;
-    [SerializeField] private GameObject tutorialsEmpty;
 
     private List<TutorialMessage> activeMessages = new List<TutorialMessage>();
     private List<TutorialTrigger> tutorialTriggers = new List<TutorialTrigger>();
@@ -97,7 +96,6 @@ public class TutorialManager : MonoBehaviour
             item.SetActive(false);
         }
 
-        tutorialsEmpty.SetActive(false);
         this.gameObject.SetActive(false);
     }
 }

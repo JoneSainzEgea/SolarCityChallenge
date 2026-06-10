@@ -4,6 +4,7 @@ using UnityEngine;
 
 public enum TutorialType { Gameplay, Learning, Tip}
 
+[System.Serializable]
 public class Tutorial
 {
     [Tooltip("Nombre del tutorial.")]

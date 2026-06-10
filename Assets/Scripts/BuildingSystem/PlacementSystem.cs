@@ -25,12 +25,13 @@ public class PlacementSystem : MonoBehaviour
     [SerializeField] private Grid roofGrid;
     private Grid grid;
 
-
     [SerializeField] private GameObject mainGridVisualization;
     [SerializeField] private GameObject roofGridVisualization;
     private GameObject gridVisualization;
 
     private GridDataManager gridDataManager, mainGridDataManager, roofGridDataManager;    
+    
+    [SerializeField] private GameObject buildingParent;
 
     [SerializeField] private PreviewSystem preview;
     [SerializeField] private ObjectsDatabaseSO database;
@@ -75,7 +76,7 @@ public class PlacementSystem : MonoBehaviour
         StopPlacement();
         gridVisualization.SetActive(true);
 
-        buildingState = new PlacementState(ID, grid, preview, database, gridDataManager, objectPlacer, resourceManagement, soundFeedback);
+        buildingState = new PlacementState(ID, grid, buildingParent, preview, database, gridDataManager, objectPlacer, resourceManagement, soundFeedback);
         buildingState.EnterState();
 
         inputManager.OnMousePressed += PlaceStructure;

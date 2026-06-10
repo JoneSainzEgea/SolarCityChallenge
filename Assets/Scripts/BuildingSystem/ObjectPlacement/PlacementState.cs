@@ -24,15 +24,17 @@ public class PlacementState : IBuildingState
     private int selectedObjectIndex = -1;
     int ID;
     Grid grid;
+    GameObject placementParent;
     PreviewSystem previewSystem;
     ObjectsDatabaseSO database;
     GridDataManager gridData;
     ObjectPlacer objectPlacer;
 
-    public PlacementState(int iD, Grid grid, PreviewSystem previewSystem, ObjectsDatabaseSO database, GridDataManager gridData, ObjectPlacer objectPlacer, ResourceManagement resourceManagement, SoundFeedback soundFeedback)
+    public PlacementState(int iD, Grid grid, GameObject placementParent, PreviewSystem previewSystem, ObjectsDatabaseSO database, GridDataManager gridData, ObjectPlacer objectPlacer, ResourceManagement resourceManagement, SoundFeedback soundFeedback)
     {
         ID = iD;
         this.grid = grid;
+        this.placementParent = placementParent;
         this.previewSystem = previewSystem;
         this.database = database;
         this.gridData = gridData;
@@ -52,7 +54,7 @@ public class PlacementState : IBuildingState
         if (selectedObjectIndex > -1)
         {
             behaviour = database.objectsData[selectedObjectIndex].BuildBehaviour;
-            behaviour.StartPreview(previewSystem, database.objectsData[selectedObjectIndex].Prefab, database.objectsData[selectedObjectIndex].Size, grid, gridData);
+            behaviour.StartPreview(previewSystem, database.objectsData[selectedObjectIndex].Prefab, placementParent, database.objectsData[selectedObjectIndex].Size, grid, gridData);
         }
         else
             throw new System.Exception($"No object with ID {ID}");

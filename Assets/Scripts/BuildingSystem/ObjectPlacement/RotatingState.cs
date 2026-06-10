@@ -47,7 +47,7 @@ public class RotatingState : IBuildingState
             GameObject objectToRotate = objectPlacer.GetGameObjectAt(gameObjectIndex);
             if (objectToRotate != null)
             {
-                objectToRotate.transform.Rotate(0, 0, 90);
+                objectToRotate.transform.Rotate(0, 90, 0);
                 soundFeedback.PlaySound(SoundType.Place);
                 return true;
             }

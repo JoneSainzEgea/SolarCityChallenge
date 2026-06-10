@@ -37,9 +37,10 @@ public class FloorBuildBehaviourSO : BuildBehaviourSO
 
     public event Action<Vector3Int> OnFloorPlaced;
 
-    public override void StartPreview(PreviewSystem preview, GameObject prefab, Vector2Int size, Grid grid, GridDataManager gridData)
+    public override void StartPreview(PreviewSystem preview, GameObject prefab, GameObject parent, Vector2Int size, Grid grid, GridDataManager gridData)
     {
         this.prefab = prefab;
+        placementParent = parent;
         this.size = size;
         this.preview = preview;
         this.grid = grid;
@@ -100,7 +101,7 @@ public class FloorBuildBehaviourSO : BuildBehaviourSO
             int groupIndex = placer.CreateNewGroup();
             foreach (Vector3Int posRect in gridRectangle)
             {
-                placer.PlaceGroupObject(prefab, grid.CellToWorld(posRect));
+                placer.PlaceGroupObject(prefab, placementParent, grid.CellToWorld(posRect));
                 floorData.AddObjectAt(posRect, size, ID, groupIndex);
                 floorData.AddObjectToGroup(posRect, groupIndex);
             }
@@ -122,7 +123,7 @@ public class FloorBuildBehaviourSO : BuildBehaviourSO
 
         foreach (Vector3Int pos in gridRectangleEdges)
         {
-            placer.PlaceWallGroupObject(wallPrefab, grid.CellToWorld(pos), grid, gridData);
+            placer.PlaceWallGroupObject(wallPrefab, placementParent, grid.CellToWorld(pos), grid, gridData);
             externalWallData.AddObjectAt(pos, Vector2Int.one, wallID, groupIndex);
             externalWallData.AddObjectToGroup(pos, groupIndex);
 
