@@ -31,7 +31,14 @@ public class SolarPanelManager : MonoBehaviour
     {
         if (checkShadows)
             CheckShadows();
-    }   
+    }
+
+    public void RotatePanel(float angle)
+    {
+        Vector3 euler = transform.eulerAngles;
+        euler.z = angle;
+        transform.eulerAngles = euler;
+    }
 
     public float GetSolarPanelPercentage()
     {

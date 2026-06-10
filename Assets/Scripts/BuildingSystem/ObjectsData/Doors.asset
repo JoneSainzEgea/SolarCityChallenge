@@ -17,5 +17,6 @@ MonoBehaviour:
   <Prize>k__BackingField: 20
   <EnergyProduction>k__BackingField: 0
   <Size>k__BackingField: {x: 1, y: 1}
+  <Icon>k__BackingField: {fileID: 21300000, guid: bffa8f4683c6775408031a94da6d5b9c, type: 3}
   <Prefab>k__BackingField: {fileID: 5890492678357330564, guid: aa2a85df94a187647b6d52da1abfc409, type: 3}
   <BuildBehaviour>k__BackingField: {fileID: 11400000, guid: d958d20d07188ec459cef2039d824e56, type: 2}

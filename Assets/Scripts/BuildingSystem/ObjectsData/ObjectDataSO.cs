@@ -39,6 +39,9 @@ public class ObjectDataSO : ScriptableObject
     public Vector2Int Size { get; private set; } = Vector2Int.one;
 
     [field: SerializeField]
+    public Sprite Icon { get; private set; }
+
+    [field: SerializeField]
     public GameObject Prefab { get; private set; }
 
     [field: SerializeField] public BuildBehaviourSO BuildBehaviour { get; private set; }

@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ec2817b4dd356c478c5ee18d2a15526, type: 3}
+  m_Name: Plant
+  m_EditorClassIdentifier: 
+  <Name>k__BackingField: Plant
+  <ID>k__BackingField: 18
+  <Prize>k__BackingField: 0
+  <EnergyProduction>k__BackingField: 0
+  <Size>k__BackingField: {x: 1, y: 1}
+  <Icon>k__BackingField: {fileID: 21300000, guid: 1acdb59be6f65c44ca9661673ae6287e, type: 3}
+  <Prefab>k__BackingField: {fileID: 919132149155446097, guid: 57b3e5262a5ee0948973c7b1de4f1940, type: 3}
+  <BuildBehaviour>k__BackingField: {fileID: 11400000, guid: de1908b9c6372ce4c920ff59a96f9f2b, type: 2}

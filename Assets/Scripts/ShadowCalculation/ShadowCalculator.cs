@@ -10,6 +10,44 @@ public class ShadowCalculator : MonoBehaviour
 
     private List<SolarPanelManager> panels = new List<SolarPanelManager>();
 
+    private float panelAngle = 30f;
+    private float latitude = 0f;
+
+    public float GetCurrentAngle()
+    {
+        return panelAngle;
+    }
+
+    public void SetPanelsRotation(float angle)
+    {
+        panelAngle = angle;
+
+        RefreshPanels();
+
+        foreach (var panel in panels)
+        {
+            panel.RotatePanel(angle);
+        }
+    }
+
+    public void SetLatitude(float value)
+    {
+        latitude = value;
+    }
+
+    public float CalculateOrientationEfficiency()
+    {
+        float optimalTilt = latitude;
+
+        float angleDifference = Mathf.Abs(panelAngle - optimalTilt);
+
+        float radians = angleDifference * Mathf.Deg2Rad;
+
+        float efficiency = Mathf.Cos(radians);
+
+        return Mathf.Clamp01(efficiency);
+    }
+
     public void ShowShadowPercentage()
     {
         float value = GetTotalSolarPercentage();
