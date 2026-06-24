@@ -7,7 +7,6 @@ using UnityEngine.UI;
 public class SolarUI : MonoBehaviour
 {
     [SerializeField] private Slider rotationSlider;
-    [SerializeField] private InputField latitudeInput;
     [SerializeField] private TextMeshProUGUI valueText;
     [SerializeField] private ShadowCalculator shadowCalculator;
     [SerializeField] private TMP_Text resultText;
@@ -30,16 +29,6 @@ public class SolarUI : MonoBehaviour
 
         // Enviar valor al sistema
         shadowCalculator.SetPanelsRotation(value);
-    }
-
-    public void OnLatitudeChanged()
-    {    
-        if (float.TryParse(latitudeInput.text, out float result))
-        {
-            Debug.Log(result);  
-            shadowCalculator.SetLatitude(result);
-        }
-
     }
 
     public void CalculateOrientationResult()

@@ -37,7 +37,7 @@ public class ShadowCalculator : MonoBehaviour
 
     public float CalculateOrientationEfficiency()
     {
-        float optimalTilt = latitude;
+        float optimalTilt = (float)GameManager.Instance.latitud;
 
         float angleDifference = Mathf.Abs(panelAngle - optimalTilt);
 

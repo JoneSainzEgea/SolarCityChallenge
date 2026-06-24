@@ -5,6 +5,13 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    public double longitud = 42.339433;
+    public double latitud = -3.703308;
+    public int year = 2026;
+    public int month = 6;
+    public int day = 1;
+
+
     #region Singleton
     private static GameManager _instance;
 
@@ -25,4 +32,11 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(this.gameObject);
     }
     #endregion
+
+    public void UpdateDate(int y, int m, int d)
+    {
+        year = y;
+        month = m;
+        day = d;
+    }
 }

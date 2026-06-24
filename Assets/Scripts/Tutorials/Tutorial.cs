@@ -2,17 +2,12 @@
 // 05/05/2026
 using UnityEngine;
 
-public enum TutorialType { Gameplay, Learning, Tip}
-
 [System.Serializable]
 public class Tutorial
 {
     [Tooltip("Nombre del tutorial.")]
     [TextArea]
     public string tutorialName;
-
-    [Tooltip("Tipo de tutorial.")]
-    public TutorialType tutorialType;
 
     [Tooltip("Texto del tutorial que se mostrará.")]
     [TextArea]
@@ -27,4 +22,8 @@ public class Tutorial
 
     [Tooltip("¿Debe esperar una confirmación externa para completar el tutorial?")]
     public bool waitForCompletion;
+
+    [Tooltip("Nombre del evento que indica que el jugador completó la acción requerida.")]
+    [TextArea]
+    public string completionEventName;
 }

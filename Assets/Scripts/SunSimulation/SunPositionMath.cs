@@ -144,16 +144,4 @@ public class SunPositionMath : MonoBehaviour
         sun.transform.position = new Vector3((float)(sphereOffset * Math.Cos(azimuth)), (float)(sphereOffset * Math.Sin(altitude)), (float)(sphereOffset * Math.Sin(azimuth)));
         transform.position = sun.transform.position;
     }
-
-    // Función que convierta de día y mes a dn
-    // Cálculo del day angle (2*Pi*(dn-1)/365)
-    // Cálculo de Et
-    // Función que convierta la hora a LAT (corrección horaria)
-    // Cálculo del ángulo horario
-    // Cálculo del solar declination
-    // Cálculo de la altura solar
-    // Cálculo del azimuth solar
-
-
-    // Paso 1: dada una ubicación y fecha situa al sol tomando al observador como referencia
 }

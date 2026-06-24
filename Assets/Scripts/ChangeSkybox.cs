@@ -13,8 +13,11 @@ public class ChangeSkybox : MonoBehaviour
     private bool isDay = true;
     private Coroutine transitionCoroutine;
 
-    public void OnChangeSkybox()
+    public void OnChangeSkybox(bool toDay)
     {
+        if (toDay == isDay)
+            return;
+        
         if (transitionCoroutine != null)
             StopCoroutine(transitionCoroutine);
 

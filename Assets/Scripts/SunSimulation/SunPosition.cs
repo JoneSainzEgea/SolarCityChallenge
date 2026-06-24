@@ -23,13 +23,11 @@ public class SunPosition : MonoBehaviour
     {
         sunPositionMath = GetComponent<SunPositionMath>();
 
-        // Coordenadas de Burgos
-        latitude = 42.35079519629251;
-        longitude = -3.6877558759138362;
-
+        latitude = GameManager.Instance.latitud;
+        longitude = GameManager.Instance.longitud;
+        date = new DateTime(GameManager.Instance.year, GameManager.Instance.month, GameManager.Instance.day, 13, 0, 0);
         UpdateSunPosition();
     }
-
 
     public void UpdateSunPosition()
     {

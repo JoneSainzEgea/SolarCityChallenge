@@ -9,7 +9,7 @@ public class TutorialTrigger : MonoBehaviour
     private int currentIndex = 0;
     private TutorialMessage currentMessage;
     private bool triggered = false;
-
+    private bool isListeningToCompletion = false;
     private bool canceled = false;
 
     private void OnEnable()
@@ -83,13 +83,25 @@ public class TutorialTrigger : MonoBehaviour
 
     private void DisplayTutorial(Tutorial tutorial)
     {
-        if (canceled)
-            return;
+        if (canceled) return;
 
         currentMessage = TutorialManager.Instance.ShowMessage(tutorial);
-        currentMessage.Initialize(tutorial, tutorial.waitForCompletion ? (System.Action)null : CompleteCurrentStep);
-    }
 
+        if (tutorial.waitForCompletion)
+        {
+            currentMessage.Initialize(tutorial, null);
+
+            if (!string.IsNullOrEmpty(tutorial.completionEventName))
+            {
+                isListeningToCompletion = true;
+                EventsManager.CallNormalEvents(tutorial.completionEventName, OnCompletionEventReceived);
+            }
+        }
+        else
+        {
+            currentMessage.Initialize(tutorial, CompleteCurrentStep);
+        }
+    }
     public void CompleteCurrentStep()
     {
         if (canceled)
@@ -97,6 +109,20 @@ public class TutorialTrigger : MonoBehaviour
 
         currentIndex++;
         StartCoroutine(TransitionToNextMessage());
+    }
+
+    private void OnCompletionEventReceived()
+    {
+        if (canceled) return;
+
+        if (isListeningToCompletion)
+        {
+            Tutorial tutorial = tutorials[currentIndex];
+            EventsManager.StopCallNormalEvents(tutorial.completionEventName, OnCompletionEventReceived);
+            isListeningToCompletion = false;
+        }
+
+        CompleteCurrentStep();
     }
 
 
@@ -118,6 +144,11 @@ public class TutorialTrigger : MonoBehaviour
         {
             TutorialManager.Instance.RemoveMessage(currentMessage);
         }
+        if (isListeningToCompletion && currentIndex < tutorials.Count)
+        {
+            EventsManager.StopCallNormalEvents(tutorials[currentIndex].completionEventName, OnCompletionEventReceived);
+        }
         canceled = true;
+
     }
 }

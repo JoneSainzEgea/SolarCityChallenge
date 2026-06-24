@@ -6,7 +6,8 @@ using UnityEngine.SceneManagement;
 
 public class PauseMenuInteractions : MonoBehaviour
 {
-    [SerializeField] private GameObject pauseUI;
+    [SerializeField] private GameObject buildingCanvas;
+    [SerializeField] private GameObject pauseCanvas;
     [SerializeField] private GameObject pausePanel;
     [SerializeField] private GameObject settingsPanel;
     [SerializeField] private GameObject mainMenuConfirmationPanel;
@@ -26,7 +27,8 @@ public class PauseMenuInteractions : MonoBehaviour
     {
         isPaused = !isPaused;
         Time.timeScale = isPaused ? 0 : 1;
-        pauseUI.SetActive(isPaused);
+        buildingCanvas.SetActive(!isPaused);
+        pauseCanvas.SetActive(isPaused);
     }
 
     public void OpenSettings()
